@@ -3,10 +3,10 @@ import './styles.css'
 import React, { Fragment, useState } from 'react'
 import { Keyframes, animated } from 'react-spring/renderprops'
 
-import { Avatar, Form, Input, Button, Checkbox } from 'antd'
+import { Layout, Avatar, Form, Input, Button, Checkbox } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
-import delay from 'await-delay'
-
+import delay from 'await-delay';
+import Draggable from 'react-draggable';
 // Creates a spring with predefined animation slots
 const Sidebar = Keyframes.Spring({
   // Slots can take arrays/chains,
@@ -23,9 +23,27 @@ const Content = Keyframes.Trail({
   open: { x: 0, opacity: 1, delay: 100 },
   close: { x: -100, opacity: 0, delay: 0 },
 })
+const { Header, Footer, Sider } = Layout;
+const Sidebar_Color = 'rgb(59,160,233)';
+const Content_Color = 'rgb(16,142,233)';
+const Header_Color = 'rgb(125,188,234)';
+
+const Layout_1 = () => {
+  return (
+    <Layout>
+      <Header style={{ background: `${Header_Color}` }}>Header</Header>
+      <Layout>
+        <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
+        <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
+      </Layout>
+      <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+    </Layout>
+  )
+}
 
 const items = [
   <Avatar src="https://avatars0.githubusercontent.com/u/41789633?s=460&u=f12ac960ecf9e98ba5184b086df996a7bc96484e&v=4" />,
+  <br />,
   <Input
     size="small"
     prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -48,13 +66,25 @@ const items = [
       children="Log in"
     />
   </Fragment>,
+  <Fragment>
+    <Draggable>
+      <Layout>
+        <Header style={{ background: `${Header_Color}` }}>Header</Header>
+        <Layout>
+          <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
+          <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
+        </Layout>
+        <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+      </Layout>
+    </Draggable>
+  </Fragment>,
 ]
 
 export default function App() {
   const [open, SetOpen] = useState();
   const toggle = () => SetOpen(!open);
 
-  const icon = open ? <MenuFoldOutlined style={{width:'450px'}} className="sidebar-toggle" onClick={toggle} /> : <MenuUnfoldOutlined className="sidebar-toggle" onClick={toggle}/>;
+  const icon = open ? <MenuFoldOutlined style={{ width: '450px' }} className="sidebar-toggle" onClick={toggle} /> : <MenuUnfoldOutlined className="sidebar-toggle" onClick={toggle} />;
   const state = open === undefined
     ? 'close'
     : open
@@ -89,6 +119,7 @@ export default function App() {
                 </animated.div>
               )}
             </Content>
+
           </animated.div>
         )}
       </Sidebar>
