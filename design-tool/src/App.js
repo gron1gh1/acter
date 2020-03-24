@@ -2,11 +2,14 @@ import './antd.css'
 import './styles.css'
 import React, { Fragment, useState } from 'react'
 import { Keyframes, animated } from 'react-spring/renderprops'
-
+import {useSpring} from 'react-spring';
 import { Layout, Avatar, Form, Input, Button, Checkbox } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
 import delay from 'await-delay';
 import Draggable from 'react-draggable';
+import styled from 'styled-components';
+
+
 // Creates a spring with predefined animation slots
 const Sidebar = Keyframes.Spring({
   // Slots can take arrays/chains,
@@ -33,7 +36,9 @@ const Layout_1 = () => {
     <Layout>
       <Header style={{ background: `${Header_Color}` }}>Header</Header>
       <Layout>
-        <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
+        <Layout.Content style={{ background: `${Content_Color}` }}>
+          Content
+        </Layout.Content>
         <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
       </Layout>
       <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
@@ -79,12 +84,27 @@ const items = [
     </Draggable>
   </Fragment>,
 ]
+const MenuFoldOutlinedAni = styled.div`
+   
+    .ani{
+      width:0px;
+      transition : 0.5s;
+    }
+  &:hover{
+    .ani{
+      width:450px;
+    }
+  }
+`;
 
 export default function App() {
   const [open, SetOpen] = useState();
   const toggle = () => SetOpen(!open);
-
-  const icon = open ? <MenuFoldOutlined style={{ width: '450px' }} className="sidebar-toggle" onClick={toggle} /> : <MenuUnfoldOutlined className="sidebar-toggle" onClick={toggle} />;
+ // const [start, setStart] = useState(0);
+  const style_props = useSpring({ width: open ? 450 : 0});
+  
+  const icon = open ? <animated.div><MenuFoldOutlined style={style_props}  className="sidebar-toggle ani" onClick={toggle} /></animated.div> : <MenuUnfoldOutlined className="sidebar-toggle" onClick={toggle} />;
+  
   const state = open === undefined
     ? 'close'
     : open
@@ -92,7 +112,8 @@ export default function App() {
       : 'close';
   return (
     <div style={{ position: 'absolute', background: 'lightgray', width: '100%', height: '100%' }}>
-      {icon}
+     <animated.div style={style_props} ><MenuFoldOutlined  className="sidebar-toggle ani" onClick={toggle} /></animated.div>
+
       <Sidebar native state={state}>
         {({ x }) => (
 
