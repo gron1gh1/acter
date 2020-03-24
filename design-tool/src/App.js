@@ -2,7 +2,7 @@ import './antd.css'
 import './styles.css'
 import React, { Fragment, useState } from 'react'
 import { Keyframes, animated } from 'react-spring/renderprops'
-import {useSpring} from 'react-spring';
+import { useSpring, animated as a } from 'react-spring';
 import { Layout, Avatar, Form, Input, Button, Checkbox } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
 import delay from 'await-delay';
@@ -31,18 +31,22 @@ const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-const Layout_1 = () => {
+function Layout_1() {
   return (
-    <Layout>
-      <Header style={{ background: `${Header_Color}` }}>Header</Header>
-      <Layout>
-        <Layout.Content style={{ background: `${Content_Color}` }}>
-          Content
-        </Layout.Content>
-        <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
+    <Draggable>
+      <div>
+      <Layout  style={{position: 'absolute'}}>
+        <Header style={{ background: `${Header_Color}` }}>Header</Header>
+        <Layout>
+          <Layout.Content style={{ background: `${Content_Color}` }}>
+            Content
+          </Layout.Content>
+          <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
+        </Layout>
+        <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
       </Layout>
-      <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
-    </Layout>
+      </div>
+    </Draggable>
   )
 }
 
@@ -71,40 +75,16 @@ const items = [
       children="Log in"
     />
   </Fragment>,
-  <Fragment>
-    <Draggable>
-      <Layout>
-        <Header style={{ background: `${Header_Color}` }}>Header</Header>
-        <Layout>
-          <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
-          <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
-        </Layout>
-        <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
-      </Layout>
-    </Draggable>
-  </Fragment>,
+    <Layout_1 />,
 ]
-const MenuFoldOutlinedAni = styled.div`
-   
-    .ani{
-      width:0px;
-      transition : 0.5s;
-    }
-  &:hover{
-    .ani{
-      width:450px;
-    }
-  }
-`;
 
 export default function App() {
   const [open, SetOpen] = useState();
   const toggle = () => SetOpen(!open);
- // const [start, setStart] = useState(0);
-  const style_props = useSpring({ width: open ? 450 : 0});
-  
-  const icon = open ? <animated.div><MenuFoldOutlined style={style_props}  className="sidebar-toggle ani" onClick={toggle} /></animated.div> : <MenuUnfoldOutlined className="sidebar-toggle" onClick={toggle} />;
-  
+  const contentProps = useSpring({
+    left: open ? 220 : 0
+  });
+
   const state = open === undefined
     ? 'close'
     : open
@@ -112,7 +92,9 @@ export default function App() {
       : 'close';
   return (
     <div style={{ position: 'absolute', background: 'lightgray', width: '100%', height: '100%' }}>
-     <animated.div style={style_props} ><MenuFoldOutlined  className="sidebar-toggle ani" onClick={toggle} /></animated.div>
+      <a.div style={{ position: 'absolute', ...contentProps }}>
+        <MenuFoldOutlined className="sidebar-toggle ani" onClick={toggle} />
+      </a.div>
 
       <Sidebar native state={state}>
         {({ x }) => (
