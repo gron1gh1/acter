@@ -17,7 +17,7 @@ const Sidebar = Keyframes.Spring({
   // or async functions with side-effects
   close: async call => {
     await delay(100)
-    await call({ delay: 0, x: -100 })
+    await call({ delay: 0, x: -300})
   },
 })
 
@@ -34,8 +34,7 @@ const Header_Color = 'rgb(125,188,234)';
 function Layout_1() {
   return (
     <Draggable>
-      <div>
-      <Layout  style={{position: 'absolute'}}>
+      <Layout>
         <Header style={{ background: `${Header_Color}` }}>Header</Header>
         <Layout>
           <Layout.Content style={{ background: `${Content_Color}` }}>
@@ -45,7 +44,7 @@ function Layout_1() {
         </Layout>
         <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
       </Layout>
-      </div>
+
     </Draggable>
   )
 }
@@ -75,7 +74,6 @@ const items = [
       children="Log in"
     />
   </Fragment>,
-    <Layout_1 />,
 ]
 
 export default function App() {
@@ -96,36 +94,50 @@ export default function App() {
         <MenuFoldOutlined className="sidebar-toggle ani" onClick={toggle} />
       </a.div>
 
-      <Sidebar native state={state}>
+      <Sidebar native state={state} >
         {({ x }) => (
+          <div style={{ height:'100%'}}>
+            <animated.div
+              className='sidebar'
+              style={{
+                transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
+              }}>
+              <Content
+                native
+                items={items}
+                keys={items.map((_, i) => i)}
+                reverse={!open}
+                state={state}>
+                {(item, i) => ({ x, ...props }) => (
+                  <animated.div
+                    style={{
+                      transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
+                      ...props
+                    }}>
+                    <Form.Item className={i === 0 ? 'middle' : ''} >
+                      {item}
+                    </Form.Item>
+                  </animated.div>
+                )}
+              </Content>
 
-          <animated.div
-            className="sidebar"
-            style={{
-              transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
-            }}>
-            <Content
-              native
-              items={items}
-              keys={items.map((_, i) => i)}
-              reverse={!open}
-              state={state}>
-              {(item, i) => ({ x, ...props }) => (
-                <animated.div
-                  style={{
-                    transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
-                    ...props,
-                  }}>
-                  <Form.Item className={i === 0 ? 'middle' : ''}>
-                    {item}
-                  </Form.Item>
-                </animated.div>
-              )}
-            </Content>
+            </animated.div>
+            <animated.div
+              style={{
+                position: 'absolute',
 
-          </animated.div>
+                top:270,
+                left: x.interpolate(x => `${x+10}px`),
+               
+              }}>
+              <Layout_1 />
+            </animated.div>
+          </div>
         )}
+
       </Sidebar>
+
     </div>
+
   )
 }
