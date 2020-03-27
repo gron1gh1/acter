@@ -1,6 +1,6 @@
 import './antd.css'
 import './styles.css'
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState,useRef } from 'react'
 import { Keyframes, animated } from 'react-spring/renderprops'
 import { useSpring, animated as a } from 'react-spring';
 import { Layout, Avatar, Form, Input, Button, Checkbox } from 'antd'
@@ -31,10 +31,9 @@ const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-function Layout_1() {
+function Layout_1({opacity}) {
   return (
-    <Draggable>
-      <Layout>
+   <Layout style={{opacity}}>
         <Header style={{ background: `${Header_Color}` }}>Header</Header>
         <Layout>
           <Layout.Content style={{ background: `${Content_Color}` }}>
@@ -44,7 +43,40 @@ function Layout_1() {
         </Layout>
         <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
       </Layout>
+  )
+}
 
+function Layout_item({item})
+{
+  const [start,AniControl] = useState(0);
+  const ani_props = useSpring({opacity: start ? 0 : 1})
+  
+  const [opacity,SetOpa] = useState(1);
+  function drag_start(e)
+  {
+    SetOpa(0.5);
+  }
+  function drag_ing(e,data)
+  {
+  
+  }
+  function drag_stop(e,data)
+  {
+    SetOpa(1);
+    if(data.x > 270)
+    {
+      AniControl(1);
+      console.log('침범');
+    }
+  }
+
+  return (
+    <Draggable onStart={drag_start}
+    onDrag={drag_ing}
+    onStop={drag_stop}>
+        <a.div style={ani_props}>
+          <Layout_1 opacity={opacity}/>
+        </a.div>
     </Draggable>
   )
 }
@@ -130,7 +162,7 @@ export default function App() {
                 left: x.interpolate(x => `${x+10}px`),
                
               }}>
-              <Layout_1 />
+              <Layout_item />
             </animated.div>
           </div>
         )}
