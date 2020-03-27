@@ -1,9 +1,9 @@
 import './antd.css'
 import './styles.css'
-import React, { Fragment, useState,useRef } from 'react'
+import React, { Fragment, useState, useRef } from 'react'
 import { Keyframes, animated } from 'react-spring/renderprops'
 import { useSpring, animated as a } from 'react-spring';
-import { Layout, Avatar, Form, Input, Button, Checkbox } from 'antd'
+import { Layout, Avatar, Form, Input, Button, Checkbox,Row,Col } from 'antd'
 import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
 import delay from 'await-delay';
 import Draggable from 'react-draggable';
@@ -17,7 +17,7 @@ const Sidebar = Keyframes.Spring({
   // or async functions with side-effects
   close: async call => {
     await delay(100)
-    await call({ delay: 0, x: -300})
+    await call({ delay: 0, x: -300 })
   },
 })
 
@@ -31,40 +31,35 @@ const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-function Layout_1({opacity}) {
+function Layout_1({ opacity }) {
   return (
-   <Layout style={{opacity}}>
-        <Header style={{ background: `${Header_Color}` }}>Header</Header>
-        <Layout>
-          <Layout.Content style={{ background: `${Content_Color}` }}>
-            Content
+    <Layout style={{ opacity }}>
+      <Header style={{ background: `${Header_Color}` }}>Header</Header>
+      <Layout>
+        <Layout.Content style={{ background: `${Content_Color}` }}>
+          Content
           </Layout.Content>
-          <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
-        </Layout>
-        <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+        <Sider style={{ background: `${Sidebar_Color}` }}>Sider</Sider>
       </Layout>
+      <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+    </Layout>
   )
 }
 
-function Layout_item({item})
-{
-  const [start,AniControl] = useState(0);
-  const ani_props = useSpring({opacity: start ? 0 : 1})
-  
-  const [opacity,SetOpa] = useState(1);
-  function drag_start(e)
-  {
+function Layout_item({ item }) {
+  const [start, AniControl] = useState(0);
+  const ani_props = useSpring({ opacity: start ? 0 : 1 })
+
+  const [opacity, SetOpa] = useState(1);
+  function drag_start(e) {
     SetOpa(0.5);
   }
-  function drag_ing(e,data)
-  {
-  
+  function drag_ing(e, data) {
+
   }
-  function drag_stop(e,data)
-  {
+  function drag_stop(e, data) {
     SetOpa(1);
-    if(data.x > 270)
-    {
+    if (data.x > 270) {
       AniControl(1);
       console.log('침범');
     }
@@ -72,11 +67,11 @@ function Layout_item({item})
 
   return (
     <Draggable onStart={drag_start}
-    onDrag={drag_ing}
-    onStop={drag_stop}>
-        <a.div style={ani_props}>
-          <Layout_1 opacity={opacity}/>
-        </a.div>
+      onDrag={drag_ing}
+      onStop={drag_stop}>
+      <a.div style={ani_props}>
+        <Layout_1 opacity={opacity} />
+      </a.div>
     </Draggable>
   )
 }
@@ -105,7 +100,8 @@ const items = [
       className="login-form-button"
       children="Log in"
     />
-  </Fragment>,
+  </Fragment>,<Layout_item/>
+  
 ]
 
 export default function App() {
@@ -121,16 +117,14 @@ export default function App() {
       ? 'open'
       : 'close';
   return (
-    <div style={{ position: 'absolute', background: 'lightgray', width: '100%', height: '100%' }}>
-      <a.div style={{ position: 'absolute', ...contentProps }}>
-        <MenuFoldOutlined className="sidebar-toggle ani" onClick={toggle} />
-      </a.div>
-
+    <div >
+      <Row style={{position: 'absolute', width: '100%', height: '100%'}}>
+        <Col span={4} 
+              className='sidebar' style={{background:'white',overflow:'visible',zIndex:99} }>
+        <MenuFoldOutlined className="sidebar-toggle" onClick={toggle} style={{position:'absolute',right:10,top:0}}/>
       <Sidebar native state={state} >
         {({ x }) => (
-          <div style={{ height:'100%'}}>
             <animated.div
-              className='sidebar'
               style={{
                 transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
               }}>
@@ -151,24 +145,18 @@ export default function App() {
                     </Form.Item>
                   </animated.div>
                 )}
-              </Content>
-
-            </animated.div>
-            <animated.div
-              style={{
-                position: 'absolute',
-
-                top:270,
-                left: x.interpolate(x => `${x+10}px`),
                
-              }}>
-              <Layout_item />
+              </Content>
             </animated.div>
-          </div>
+             
         )}
-
+        
       </Sidebar>
-
+      </Col>
+      <Col span={20} style={{background:'lightgray'}}>
+        ASD
+      </Col>
+      </Row>
     </div>
 
   )
