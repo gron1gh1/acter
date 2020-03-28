@@ -1,6 +1,6 @@
 import './antd.css'
 import './styles.css'
-import React, { Fragment, useState, createContext, useContext,useRef } from 'react'
+import React, { Fragment, useState, createContext, useContext, useRef } from 'react'
 import { Keyframes, animated } from 'react-spring/renderprops'
 import { useSpring, animated as a } from 'react-spring';
 import { Layout, Avatar, Form, Input, Button, Checkbox, Row, Col } from 'antd'
@@ -25,6 +25,27 @@ const Sidebar = Keyframes.Spring({
 const Content = Keyframes.Trail({
   open: { x: 0, opacity: 1, delay: 100 },
   close: { x: -100, opacity: 0, delay: 0 },
+});
+
+const Layout_Ani = Keyframes.Spring({
+  use: {
+    from: { opacity: 0 },
+    to: { opacity: 1 },
+  },
+  not_use: {
+    from: { opacity: 1 },
+    to: { opacity: 0 },
+  },
+
+  mouse_down: {
+    from: { opacity: 1 },
+    to: { opacity: 0.5 },
+  },
+  mouse_up: {
+    from: { opacity: 0.5 },
+    to: { opacity: 1 },
+  }
+
 })
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
@@ -34,7 +55,6 @@ const Header_Color = 'rgb(125,188,234)';
 function Layout_1({ style }) {
 
   return (
-    
     <Layout style={style}>
       <Header style={{ background: `${Header_Color}` }}>Header</Header>
       <Layout>
@@ -54,9 +74,9 @@ function Layout_2({ style }) {
 
   return (
 
-    <Layout  style={style}>
-        
-      <Sider style={{ background: `${Sidebar_Color}`,width:'5px'}}>Sider</Sider>
+    <Layout style={style}>
+
+      <Sider style={{ background: `${Sidebar_Color}`, width: '5px' }}>Sider</Sider>
 
       <Layout>
         <Header style={{ background: `${Header_Color}` }}>Header</Header>
@@ -67,70 +87,55 @@ function Layout_2({ style }) {
 
   )
 }
-function Layout_item({ item ,children}) {
+function Layout_item({ item, children }) {
   const main = useContext(AppContext);
-  const [start, AniControl] = useState(0);
+  const [ani_state, AniControl] = useState('use');
   const boxRef = useRef();
-  const ani_props = useSpring({ opacity: start ? 0 : 1 });
 
-  const [opacity, SetOpa] = useState(1);
   function drag_start(e) {
-    SetOpa(0.5);
+    AniControl('mouse_down');
   }
   function drag_ing(e, data) {
   }
   function drag_stop(e, data) {
-    SetOpa(1);
-    if (data.x > boxRef.current.offsetWidth) {
-      AniControl(1);
+    AniControl('mouse_up');
+    if (e.clientX > boxRef.current.offsetWidth) {
+
       main.SetLayout(true);
+      AniControl('not_use');
       main.AddComponent(main.Components.splice().concat(children));
       console.log('침범');
     }
   }
 
   return (
+
     <Draggable onStart={drag_start}
       onDrag={drag_ing}
       onStop={drag_stop}>
-      <a.div ref={boxRef} style={ani_props}>
-        {React.cloneElement(children,{style:{opacity}})}
-      </a.div>
+      {/* <a.div ref={boxRef} style={ani_props}> */}
+      {/* {React.cloneElement(children,{style:{opacity}})} */}
+      {/* </a.div> */}
+  
+      <div>
+      <Layout_Ani state={ani_state}>
+        {styles => (
+          <animated.div ref={boxRef} style={styles}>
+            {React.cloneElement(children)}
+          </animated.div>)}
+      </Layout_Ani>
+      </div>
     </Draggable>
   )
 }
 
 const items = [
-  <Avatar src="https://avatars0.githubusercontent.com/u/41789633?s=460&u=f12ac960ecf9e98ba5184b086df996a7bc96484e&v=4" />,
-  <br />,
-  <Input
-    size="small"
-    prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-    placeholder="Username"
-  />,
-  <Input
-    size="small"
-    prefix={<LockOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-    type="password"
-    placeholder="Password"
-  />,
-  <Fragment>
-    <Checkbox size="small">Remember me</Checkbox>
-    <a className="login-form-forgot" href="#" children="Forgot password" />
-    <Button
-      size="small"
-      type="primary"
-      htmlType="submit"
-      className="login-form-button"
-      children="Log in"
-    />
-  </Fragment>,
   <Layout_item>
-  <Layout_1/>
+    <Layout_1 />
   </Layout_item>,
   <Layout_item>
-    <Layout_2/>
-    </Layout_item>
+    <Layout_2 />
+  </Layout_item>
 ]
 
 function Main() {
@@ -143,7 +148,7 @@ function Main() {
       ? 'open'
       : 'close';
 
-const ani_props = useSpring({ opacity: main.layout ? 1 : 0 });
+  const ani_props = useSpring({ opacity: main.layout ? 1 : 0 });
   return (
     <Row style={{ position: 'absolute', width: '100%', height: '100%' }}>
       <Col span={4}
@@ -182,11 +187,11 @@ const ani_props = useSpring({ opacity: main.layout ? 1 : 0 });
       </Col>
       <Col span={20} style={{ background: 'lightgray' }}>
 
-        {main.Components.map((v,i) =>
+        {main.Components.map((v, i) =>
           (
             <a.div style={ani_props}>
-              {React.cloneElement(v,{style: {height:'100vh'}})}
-          </a.div>
+              {React.cloneElement(v, { style: { height: '100vh' } })}
+            </a.div>
           )
         )}
 
@@ -200,10 +205,10 @@ const ani_props = useSpring({ opacity: main.layout ? 1 : 0 });
 const AppContext = createContext();
 export default function App() {
   const [layout, SetLayout] = useState(false);
-  const [Components,AddComponent] = useState([]);
+  const [Components, AddComponent] = useState([]);
 
   const data = {
-    layout, SetLayout,Components,AddComponent
+    layout, SetLayout, Components, AddComponent
   }
 
   return (
