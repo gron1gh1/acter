@@ -32,7 +32,9 @@ const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
 function Layout_1({ style }) {
+
   return (
+    
     <Layout style={style}>
       <Header style={{ background: `${Header_Color}` }}>Header</Header>
       <Layout>
@@ -43,11 +45,30 @@ function Layout_1({ style }) {
       </Layout>
       <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
     </Layout>
+
   )
 }
 
-function Layout_item({ item }) {
-  const show_layout = useContext(AppContext);
+
+function Layout_2({ style }) {
+
+  return (
+
+    <Layout  style={style}>
+        
+      <Sider style={{ background: `${Sidebar_Color}`,width:'5px'}}>Sider</Sider>
+
+      <Layout>
+        <Header style={{ background: `${Header_Color}` }}>Header</Header>
+        <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
+        <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+      </Layout>
+    </Layout>
+
+  )
+}
+function Layout_item({ item ,children}) {
+  const main = useContext(AppContext);
   const [start, AniControl] = useState(0);
   const boxRef = useRef();
   const ani_props = useSpring({ opacity: start ? 0 : 1 });
@@ -62,7 +83,8 @@ function Layout_item({ item }) {
     SetOpa(1);
     if (data.x > boxRef.current.offsetWidth) {
       AniControl(1);
-      show_layout.SetLayout(true);
+      main.SetLayout(true);
+      main.AddComponent(main.Components.splice().concat(children));
       console.log('침범');
     }
   }
@@ -72,7 +94,7 @@ function Layout_item({ item }) {
       onDrag={drag_ing}
       onStop={drag_stop}>
       <a.div ref={boxRef} style={ani_props}>
-        <Layout_1 style={{opacity}} />
+        {React.cloneElement(children,{style:{opacity}})}
       </a.div>
     </Draggable>
   )
@@ -103,21 +125,25 @@ const items = [
       children="Log in"
     />
   </Fragment>,
-  <Layout_item />
-
+  <Layout_item>
+  <Layout_1/>
+  </Layout_item>,
+  <Layout_item>
+    <Layout_2/>
+    </Layout_item>
 ]
 
 function Main() {
   const [open, SetOpen] = useState();
   const toggle = () => SetOpen(!open);
-  const show_layout = useContext(AppContext);
+  const main = useContext(AppContext);
   const state = open === undefined
     ? 'close'
     : open
       ? 'open'
       : 'close';
 
-const ani_props = useSpring({ opacity: show_layout.layout ? 1 : 0 });
+const ani_props = useSpring({ opacity: main.layout ? 1 : 0 });
   return (
     <Row style={{ position: 'absolute', width: '100%', height: '100%' }}>
       <Col span={4}
@@ -156,11 +182,13 @@ const ani_props = useSpring({ opacity: show_layout.layout ? 1 : 0 });
       </Col>
       <Col span={20} style={{ background: 'lightgray' }}>
 
-        {show_layout.layout &&
-          <a.div style={ani_props}>
-            <Layout_1 style={{ height: '100vh' }} />
+        {main.Components.map((v,i) =>
+          (
+            <a.div style={ani_props}>
+              {React.cloneElement(v,{style: {height:'100vh'}})}
           </a.div>
-        }
+          )
+        )}
 
       </Col>
     </Row>
@@ -172,9 +200,10 @@ const ani_props = useSpring({ opacity: show_layout.layout ? 1 : 0 });
 const AppContext = createContext();
 export default function App() {
   const [layout, SetLayout] = useState(false);
+  const [Components,AddComponent] = useState([]);
 
   const data = {
-    layout, SetLayout
+    layout, SetLayout,Components,AddComponent
   }
 
   return (
