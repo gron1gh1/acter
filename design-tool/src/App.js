@@ -72,7 +72,7 @@ function Layout_item({ item }) {
       onDrag={drag_ing}
       onStop={drag_stop}>
       <a.div ref={boxRef} style={ani_props}>
-        <Layout_1 opacity={opacity} />
+        <Layout_1 style={{opacity}} />
       </a.div>
     </Draggable>
   )
