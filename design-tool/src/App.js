@@ -36,7 +36,13 @@ const Layout_Ani = Keyframes.Spring({
     from: { opacity: 1 },
     to: { opacity: 0 },
   },
-
+  // not_use: async call => {
+  //   await call({ opacity: 0 })
+  //   await call({ opacity:1 })
+  //   await delay(300)
+  //   await call({transform: 'translate3d(-1000px,0,0)'})
+  //   await call({transform: 'translate3d(-100px,0,0)'})
+  // },
   mouse_down: {
     from: { opacity: 1 },
     to: { opacity: 0.5 },
@@ -104,6 +110,7 @@ function Layout_item({ item, children }) {
       main.SetLayout(true);
       AniControl('not_use');
       main.AddComponent(main.Components.splice().concat(children));
+      main.AddMenuItem(main.MenuItems.splice());
       console.log('침범');
     }
   }
@@ -135,6 +142,9 @@ const items = [
   </Layout_item>,
   <Layout_item>
     <Layout_2 />
+  </Layout_item>,
+  <Layout_item>
+    <Layout_2 />
   </Layout_item>
 ]
 
@@ -162,8 +172,8 @@ function Main() {
               }}>
               <Content
                 native
-                items={items}
-                keys={items.map((_, i) => i)}
+                items={main.MenuItems}
+                keys={main.MenuItems.map((_, i) => i)}
                 reverse={!open}
                 state={state}>
                 {(item, i) => ({ x, ...props }) => (
@@ -206,9 +216,19 @@ const AppContext = createContext();
 export default function App() {
   const [layout, SetLayout] = useState(false);
   const [Components, AddComponent] = useState([]);
-
+  const [MenuItems,AddMenuItem] = useState([
+    <Layout_item>
+      <Layout_1 />
+    </Layout_item>,
+    <Layout_item>
+      <Layout_2 />
+    </Layout_item>,
+    <Layout_item>
+      <Layout_2 />
+    </Layout_item>
+  ]);
   const data = {
-    layout, SetLayout, Components, AddComponent
+    layout, SetLayout, Components, AddComponent,MenuItems,AddMenuItem
   }
 
   return (
