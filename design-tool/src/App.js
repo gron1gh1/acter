@@ -23,7 +23,7 @@ const Sidebar = Keyframes.Spring({
 
 // Creates a keyframed trail
 const Content = Keyframes.Trail({
-  open: { x: 0, opacity: 1, delay: 100 },
+  open: { x: 0, opacity: 1, delay: 100},
   close: { x: -100, opacity: 0, delay: 0 },
 });
 
@@ -36,13 +36,11 @@ const Layout_Ani = Keyframes.Spring({
     from: { opacity: 1 },
     to: { opacity: 0 },
   },
-  // not_use: async call => {
-  //   await call({ opacity: 0 })
-  //   await call({ opacity:1 })
-  //   await delay(300)
-  //   await call({transform: 'translate3d(-1000px,0,0)'})
-  //   await call({transform: 'translate3d(-100px,0,0)'})
-  // },
+  restore: async call => {
+    await call({transform: 'translate3d(-300px,0,0)'});
+    await call({from:{transform: 'translate3d(-300px,0,0)',opacity:0},to:{transform: 'translate3d(0%,0,0)',opacity:1}})
+
+  },
   mouse_down: {
     from: { opacity: 1 },
     to: { opacity: 0.5 },
@@ -97,7 +95,7 @@ function Layout_item({ item, children }) {
   const main = useContext(AppContext);
   const [ani_state, AniControl] = useState('use');
   const boxRef = useRef();
-
+  const [controlledPosition,setPoint] = useState(null);
   function drag_start(e) {
     AniControl('mouse_down');
   }
@@ -110,8 +108,13 @@ function Layout_item({ item, children }) {
       main.SetLayout(true);
       AniControl('not_use');
       main.AddComponent(main.Components.splice().concat(children));
-      main.AddMenuItem(main.MenuItems.splice());
+      console.log(main.MenuItems);
+      //main.AddMenuItem(main.MenuItems.splice());
+      //  main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item>
+      //    <Layout_2 />
+      //  </Layout_item>));
       console.log('침범');
+      AniControl('restore');
     }
   }
 
@@ -119,7 +122,9 @@ function Layout_item({ item, children }) {
 
     <Draggable onStart={drag_start}
       onDrag={drag_ing}
-      onStop={drag_stop}>
+      onStop={drag_stop}
+      position={{x:0,y:0}}
+      >
       {/* <a.div ref={boxRef} style={ani_props}> */}
       {/* {React.cloneElement(children,{style:{opacity}})} */}
       {/* </a.div> */}
@@ -127,30 +132,23 @@ function Layout_item({ item, children }) {
       <div>
       <Layout_Ani state={ani_state}>
         {styles => (
-          <animated.div ref={boxRef} style={styles}>
-            {React.cloneElement(children)}
-          </animated.div>)}
+          <div ref={boxRef}>
+            {React.cloneElement(children,{style:styles})}
+            </div>
+            )}
       </Layout_Ani>
       </div>
     </Draggable>
   )
 }
 
-const items = [
-  <Layout_item>
-    <Layout_1 />
-  </Layout_item>,
-  <Layout_item>
-    <Layout_2 />
-  </Layout_item>,
-  <Layout_item>
-    <Layout_2 />
-  </Layout_item>
-]
+
 
 function Main() {
   const [open, SetOpen] = useState();
-  const toggle = () => SetOpen(!open);
+  
+  const [reset, set] = useState(false);
+  const toggle = () => {SetOpen(!open);}
   const main = useContext(AppContext);
   const state = open === undefined
     ? 'close'
@@ -164,8 +162,8 @@ function Main() {
       <Col span={4}
         className='sidebar' style={{ background: 'white', overflow: 'visible', zIndex: 99 }}>
         <MenuFoldOutlined className="sidebar-toggle" onClick={toggle} style={{ position: 'absolute', right: 10, top: 0 }} />
-        <Sidebar native state={state} >
-          {({ x }) => (
+        <Sidebar native state={state} reset={reset}>
+          {({ x,opacity }) => (
             <animated.div
               style={{
                 transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
@@ -175,13 +173,16 @@ function Main() {
                 items={main.MenuItems}
                 keys={main.MenuItems.map((_, i) => i)}
                 reverse={!open}
-                state={state}>
+                state={state}
+                >
                 {(item, i) => ({ x, ...props }) => (
+                  console.log(i,main.MenuItems) ||
                   <animated.div
                     style={{
+                      opacity,
                       transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
                       ...props
-                    }}>
+                    }} onMouseUp={() => console.log()}>
                     <Form.Item className={i === 0 ? 'middle' : ''} >
                       {item}
                     </Form.Item>
