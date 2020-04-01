@@ -11,19 +11,19 @@ export default function App() {
   const [Components, AddComponent] = useState([]);
   const [MenuItems, AddMenuItem] = useState([
     <Layout_item>
-      <Layout_1 />
+      <Layout_1 item />
     </Layout_item>,
 
     <Layout_item>
-      <Layout_2 />
+      <Layout_2 item/>
     </Layout_item>,
 
     <Layout_item>
-      <Layout_3 />
+      <Layout_3 item/>
     </Layout_item>,
 
      <Layout_item>
-     <Layout_4 />
+     <Layout_4 item/>
    </Layout_item>,
   ]);
   const data = {

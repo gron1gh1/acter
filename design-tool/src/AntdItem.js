@@ -53,60 +53,109 @@ export function Layout_item({ item, children }) {
   }
   
   
-export function Layout_1({ style }) {
-
+export function Layout_1({ item,style }) {
+  
+  if(item === true)
+  {
+    var item_header_style = {
+      background: `${Header_Color}` ,height:'40px'
+    }
+    
+    var item_content_style = {
+      background: `${Content_Color}`,height:'100px'
+    }
+  }
   return (
     <Layout style={style}>
-      <Header style={{ background: `${Header_Color}` }}>Header</Header>
-      <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
-      <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+      <Header style={item_header_style}>Header</Header>
+      <Layout.Content style={item_content_style}>Content</Layout.Content>
+      <Footer style={item_header_style}>Footer</Footer>
     </Layout>
   )
 }
-export function Layout_2({ style }) {
-
+export function Layout_2({item, style }) {
+  if(item === true)
+  {
+    var item_header_style = {
+      background: `${Header_Color}` ,height:'40px'
+    }
+    
+    var item_content_style = {
+      background: `${Content_Color}`,height:'100px'
+    }
+    var sidebar_content_style = {
+      background: `${Sidebar_Color}`,
+      width: 50
+    }
+  }
   return (
 
     <Layout style={style}>
-      <Header style={{ background: `${Header_Color}` }}>Header</Header>
+      <Header style={item_header_style} height={50}>Header</Header>
       <Layout>
-        <Sider style={{ background: `${Sidebar_Color}`, width: '5px' }}>Sider</Sider>
-        <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
+        <Sider style={sidebar_content_style} width={sidebar_content_style.width}>Sider</Sider>
+        <Layout.Content style={item_content_style}>Content</Layout.Content>
       </Layout>
-      <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+      <Footer style={item_header_style}>Footer</Footer>
     </Layout>
 
   )
 }
-export function Layout_3({ style }) {
-
+export function Layout_3({ item,style }) {
+  if(item === true)
+  {
+    var item_header_style = {
+      background: `${Header_Color}` ,height:'40px'
+    }
+    
+    var item_content_style = {
+      background: `${Content_Color}`,height:'100px'
+    }
+    var sidebar_content_style = {
+      background: `${Sidebar_Color}`,
+      width: 50
+    }
+  }
   return (
 
     <Layout style={style}>
-      <Header style={{ background: `${Header_Color}` }}>Header</Header>
+      <Header style={item_header_style}>Header</Header>
       <Layout>
-        <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
-        <Sider style={{ background: `${Sidebar_Color}`, width: '5px' }}>Sider</Sider>
+        <Layout.Content style={item_content_style}>Content</Layout.Content>
+        <Sider style={sidebar_content_style}  width={sidebar_content_style.width}>Sider</Sider>
       </Layout>
-      <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+      <Footer style={item_header_style}>Footer</Footer>
     </Layout>
 
   )
 }
 
 
-export function Layout_4({ style }) {
-
+export function Layout_4({ item,style }) {
+  if(item === true)
+  {
+    var item_header_style = {
+      background: `${Header_Color}` ,height:'40px'
+    }
+    
+    var item_content_style = {
+      background: `${Content_Color}`,height:'100px'
+    }
+    var sidebar_content_style = {
+      background: `${Sidebar_Color}`,
+      width: 50
+    }
+  }
   return (
 
     <Layout style={style}>
 
-      <Sider style={{ background: `${Sidebar_Color}`, width: '5px' }}>Sider</Sider>
+      <Sider style={sidebar_content_style}  width={sidebar_content_style.width}>Sider</Sider>
 
       <Layout>
-        <Header style={{ background: `${Header_Color}` }}>Header</Header>
-        <Layout.Content style={{ background: `${Content_Color}` }}>Content</Layout.Content>
-        <Footer style={{ background: `${Header_Color}` }}>Footer</Footer>
+        <Header style={item_header_style}>Header</Header>
+        <Layout.Content style={item_content_style}>Content</Layout.Content>
+        <Footer style={item_header_style}>Footer</Footer>
       </Layout>
     </Layout>
 
