@@ -65,7 +65,7 @@ export default function Main() {
           {main.Components.map((v, i) =>
             (
               <animated.div style={ani_props}>
-                {React.cloneElement(v, { style: { height: '100vh' } })}
+                {React.cloneElement(v, { style: { height: '100vh' } ,item:'false'})}
               </animated.div>
             )
           )}
