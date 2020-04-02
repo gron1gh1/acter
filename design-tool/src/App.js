@@ -9,6 +9,7 @@ export const AppContext = createContext();
 export default function App() {
   const [layout, SetLayout] = useState(false);
   const [Components, AddComponent] = useState([]);
+  const [open, SetOpen] = useState();
   const [MenuItems, AddMenuItem] = useState([
     <Layout_item>
       <Layout_1 item />
@@ -27,7 +28,7 @@ export default function App() {
    </Layout_item>,
   ]);
   const data = {
-    layout, SetLayout, Components, AddComponent, MenuItems, AddMenuItem
+    layout, SetLayout, Components, AddComponent, MenuItems, AddMenuItem,open, SetOpen
   }
 
   return (

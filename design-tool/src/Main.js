@@ -9,13 +9,14 @@ import {AppContext} from './App';
 
   
 export default function Main() {
-    const [open, SetOpen] = useState();
   
-    const toggle = () => { SetOpen(!open); }
+  
     const main = useContext(AppContext);
-    const state = open === undefined
+  
+    const toggle = () => { main.SetOpen(!main.open); }
+    const state = main.open === undefined
       ? 'close'
-      : open
+      : main.open
         ? 'open'
         : 'close';
   
@@ -35,7 +36,7 @@ export default function Main() {
                   native
                   items={main.MenuItems}
                   keys={main.MenuItems.map((_, i) => i)}
-                  reverse={!open}
+                  reverse={!main.open}
                   state={state}
                 >
                   {(item, i) => ({ x, ...props }) => (
