@@ -27,7 +27,7 @@ export function Layout_item({ item, children }) {
       main.AddComponent(main.Components.splice().concat(children));
       main.SetOpen(false);
       AniControl('restore');
-      main.AddMenuItem(main.MenuItems.splice().concat(<Menu_1/>));
+      main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item><Menu_1/></Layout_item>));
    
     }
     else {
@@ -101,7 +101,9 @@ export function Menu_1() {
 export function Button_1()
 {
   return (
+    <Layout>
     <Button type="primary">Primary</Button>
+    </Layout>
   )
 }
 export function Layout_1({ item, style }) {
