@@ -27,8 +27,7 @@ export function Layout_item({ item, children }) {
       main.AddComponent(main.Components.splice().concat(children));
       main.SetOpen(false);
       AniControl('restore');
-      main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item><Menu_1/></Layout_item>));
-   
+      main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item><LoginItem/></Layout_item>).concat(<Layout_item><Button_1/></Layout_item>));
     }
     else {
       AniControl('mouse_up');
@@ -61,7 +60,7 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 8, span: 16 },
 };
-export function Menu_1() {
+export function LoginItem() {
   return (
     <Form
       {...layout}
