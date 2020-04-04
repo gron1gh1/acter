@@ -2,31 +2,37 @@ import React, { Fragment, useState, useContext, useRef } from 'react';
 import { animated as render_a} from 'react-spring/renderprops';
 import { useSpring, animated} from 'react-spring';
 import { Form, Row, Col } from 'antd';
-import { MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LockOutlined } from '@ant-design/icons';
+import { MenuFoldOutlined,LayoutOutlined,ToolFilled ,LayoutFilled} from '@ant-design/icons';
 import {Sidebar,Content} from './Spring';
 import {AppContext} from './App';
 
-
   
 export default function Main() {
-  
-  
     const main = useContext(AppContext);
-  
-    const toggle = () => { main.SetOpen(!main.open); }
-    const state = main.open === undefined
-      ? 'close'
-      : main.open
-        ? 'open'
-        : 'close';
-  
+    
+    const [CurrentMenu,SetMenu] = useState('layout');
+    const LayoutMenuShow = () => {
+      if(CurrentMenu !== 'layout')
+      {
+        SetMenu('layout');
+      }
+    }
+    const ItemMenuShow = () => {
+      if(CurrentMenu !== 'item')
+      {
+        SetMenu('item');
+      }
+    } 
     const ani_props = useSpring({ opacity: main.layout ? 1 : 0 });
     return (
       <Row style={{ position: 'absolute', width: '100%', height: '100%' }}>
         <Col span={4}
           className='sidebar' style={{ background: 'white', overflow: 'visible', zIndex: 99 }}>
-          <MenuFoldOutlined className="sidebar-toggle" onClick={toggle} style={{ position: 'absolute', right: 10, top: 0 }} />
-          <Sidebar native state={state}>
+          <div style={{height:20}}>
+          <LayoutFilled className="sidebar-toggle" onClick={LayoutMenuShow} style={{ position: 'absolute', left: 10, top: 0 }} />
+          <ToolFilled className="sidebar-toggle" onClick={ItemMenuShow} style={{ position: 'absolute', left: 50, top: 0 }} />
+          </div>
+          <Sidebar native state='open'>
             {({ x, opacity }) => (
               <render_a.div
                 style={{
@@ -34,10 +40,10 @@ export default function Main() {
                 }}>
                 <Content
                   native
-                  items={main.MenuItems}
-                  keys={main.MenuItems.map((_, i) => i)}
+                  items={CurrentMenu === 'layout' ? main.MenuItems : main.Items}
+                  keys={CurrentMenu === 'layout' ? main.MenuItems.map((_, i) => i) : main.Items.map((_, i) => i)}
                   reverse={!main.open}
-                  state={state}
+                  state='open'
                 >
                   {(item, i) => ({ x, ...props }) => (
                     <render_a.div

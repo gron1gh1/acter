@@ -1,6 +1,6 @@
 
 import React, { useState, useContext, useRef, Fragment } from 'react';
-import { Layout,Menu,Form,Input,Checkbox,Button } from 'antd'
+import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
 import Draggable from 'react-draggable';
 import { Layout_Ani } from './Spring';
 
@@ -25,9 +25,9 @@ export function Layout_item({ item, children }) {
       main.SetLayout(true);
       AniControl('not_use');
       main.AddComponent(main.Components.splice().concat(children));
-      main.SetOpen(false);
+    //  main.SetOpen(false);
       AniControl('restore');
-      main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item><LoginItem/></Layout_item>).concat(<Layout_item><Button_1/></Layout_item>));
+      //main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item><MenuItem /></Layout_item>).concat(<Layout_item><Button_1 /></Layout_item>));
     }
     else {
       AniControl('mouse_up');
@@ -44,8 +44,8 @@ export function Layout_item({ item, children }) {
       <div>
         <Layout_Ani state={ani_state}>
           {styles => (
-            <div ref={boxRef}>
-              {React.cloneElement(children, { style: styles })}
+            <div ref={boxRef} style={styles}>
+              {React.cloneElement(children)}
             </div>
           )}
         </Layout_Ani>
@@ -53,20 +53,30 @@ export function Layout_item({ item, children }) {
     </Draggable>
   )
 }
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
-export function LoginItem() {
+export function MenuItem(style) {
   return (
-    <Form
+    <Menu style={style}>
+      <Menu.Item>Menu</Menu.Item>
+      <Menu.SubMenu title="SubMenu">
+        <Menu.Item>SubMenuItem</Menu.Item>
+      </Menu.SubMenu>
+    </Menu>
+  )
+}
+export function LoginItem(style) {
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  };
+  const tailLayout = {
+    wrapperCol: { offset: 8, span: 16 },
+  };
+  return (
+    <Form 
       {...layout}
       name="basic"
       initialValues={{ remember: true }}
-
+      style={style}
     >
       <Form.Item
         label="Username"
@@ -97,11 +107,10 @@ export function LoginItem() {
   )
 }
 
-export function Button_1()
-{
+export function ButtonItem(style) {
   return (
-    <Layout>
-    <Button type="primary">Primary</Button>
+    <Layout style={style}>
+      <Button type="primary">Primary</Button>
     </Layout>
   )
 }
