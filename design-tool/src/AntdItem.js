@@ -2,16 +2,17 @@
 import React, { useState, useContext, useRef, Fragment } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
 import Draggable from 'react-draggable';
-import { Layout_Ani } from './Spring';
+import { ItemSpring } from './Spring';
 
 import { AppContext } from './App';
+import produce from 'immer';
 
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-export function Layout_item({ item, children }) {
+export function ItemAnimation({ item, children }) {
   const main = useContext(AppContext);
   const [ani_state, AniControl] = useState('use');
   const boxRef = useRef();
@@ -24,8 +25,8 @@ export function Layout_item({ item, children }) {
     if (e.clientX > boxRef.current.offsetWidth) {
       main.SetLayout(true);
       AniControl('not_use');
-      main.AddComponent(main.Components.splice().concat(children));
-    //  main.SetOpen(false);
+      main.AddComponent(produce(draft => { draft.layout[0] = children; }));
+      //  main.SetOpen(false);
       AniControl('restore');
       //main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item><MenuItem /></Layout_item>).concat(<Layout_item><Button_1 /></Layout_item>));
     }
@@ -42,13 +43,13 @@ export function Layout_item({ item, children }) {
       position={{ x: 0, y: 0 }}
     >
       <div>
-        <Layout_Ani state={ani_state}>
+        <ItemSpring state={ani_state}>
           {styles => (
-            <div ref={boxRef} style={styles}>
+            <div ref={boxRef} style={styles} onDrop={(e)=>{console.log(e)}}>
               {React.cloneElement(children)}
             </div>
           )}
-        </Layout_Ani>
+        </ItemSpring>
       </div>
     </Draggable>
   )
@@ -72,7 +73,7 @@ export function LoginItem(style) {
     wrapperCol: { offset: 8, span: 16 },
   };
   return (
-    <Form 
+    <Form
       {...layout}
       name="basic"
       initialValues={{ remember: true }}
@@ -189,7 +190,8 @@ export function Layout_3({ item, style }) {
 }
 
 
-export function Layout_4({ item, style }) {
+export function Layout_4({ item, style,sidebar }) {
+  
   if (item === true) {
     var item_header_style = {
       background: `${Header_Color}`, height: '40px'
@@ -207,12 +209,26 @@ export function Layout_4({ item, style }) {
 
     <Layout style={style}>
 
-      <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>Sider</Sider>
+      <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
+      {sidebar && sidebar.map((v, i) =>
+            (
+              <div>
+                {React.cloneElement(v)}
+                </div>
+            )
+          )}
+      </Sider>
 
       <Layout>
-        <Header style={item_header_style}>Header</Header>
-        <Layout.Content style={item_content_style}>Content</Layout.Content>
-        <Footer style={item_header_style}>Footer</Footer>
+        <Header style={item_header_style}>
+          Header
+        </Header>
+        <Layout.Content style={item_content_style}>
+          Content
+        </Layout.Content>
+        <Footer style={item_header_style}>
+          Footer
+        </Footer>
       </Layout>
     </Layout>
 

@@ -2,43 +2,43 @@ import './antd.css';
 import './styles.css';
 import React, { Fragment, useState, createContext } from 'react';
 
-import {Layout_item,Layout_1,Layout_2,Layout_3,Layout_4,LoginItem,MenuItem,ButtonItem} from './AntdItem';
+import {ItemAnimation,Layout_1,Layout_2,Layout_3,Layout_4,LoginItem,MenuItem,ButtonItem} from './AntdItem';
 import Main from './Main';
 export const AppContext = createContext();
 
 export default function App() {
   const [layout, SetLayout] = useState(false);
-  const [Components, AddComponent] = useState([]);
+  const [Components, AddComponent] = useState({layout:[],content:[<MenuItem/>]});
   const [open, SetOpen] = useState();
   const [MenuItems, AddMenuItem] = useState([
-    <Layout_item>
+    <ItemAnimation>
       <Layout_1 item />
-    </Layout_item>,
+    </ItemAnimation>,
 
-    <Layout_item>
+    <ItemAnimation>
       <Layout_2 item/>
-    </Layout_item>,
+    </ItemAnimation>,
 
-    <Layout_item>
+    <ItemAnimation>
       <Layout_3 item/>
-    </Layout_item>,
+    </ItemAnimation>,
 
-     <Layout_item>
+     <ItemAnimation>
      <Layout_4 item/>
-   </Layout_item>,
+   </ItemAnimation>,
   ]);
   const [Items, AddItem] = useState([
-    <Layout_item>
+    <ItemAnimation>
       <LoginItem />
-    </Layout_item>,
+    </ItemAnimation>,
 
-    <Layout_item>
+    <ItemAnimation>
       <MenuItem/>
-    </Layout_item>,
+    </ItemAnimation>,
 
-    <Layout_item>
+    <ItemAnimation>
       <ButtonItem/>
-    </Layout_item>,
+    </ItemAnimation>,
 
   ]);
   const data = {

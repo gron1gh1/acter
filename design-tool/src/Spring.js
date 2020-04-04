@@ -3,13 +3,9 @@ import { Keyframes } from 'react-spring/renderprops';
 import delay from 'await-delay';
 // Creates a spring with predefined animation slots
 export const Sidebar = Keyframes.Spring({
-    // Slots can take arrays/chains,
+
     open: { delay: 0, x: 0 },
-    // or async functions with side-effects
-    close: async call => {
-      await delay(100)
-      await call({ delay: 0, x: -300 })
-    },
+
   })
   
   // Creates a keyframed trail
@@ -18,7 +14,7 @@ export const Sidebar = Keyframes.Spring({
     close: { x: -100, opacity: 0, delay: 0 },
   });
   
-  export const Layout_Ani = Keyframes.Spring({
+  export const ItemSpring = Keyframes.Spring({
     use: {
       from: { opacity: 0 },
       to: { opacity: 1 },

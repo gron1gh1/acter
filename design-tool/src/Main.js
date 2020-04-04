@@ -68,11 +68,11 @@ export default function Main() {
           </Sidebar>
         </Col>
         <Col span={20} style={{ background: 'lightgray' }}>
-  
-          {main.Components.map((v, i) =>
+        {/* {main.Components.layout} */}
+          {main.Components.layout.map((v, i) =>
             (
               <animated.div style={ani_props}>
-                {React.cloneElement(v, { style: { height: '100vh' } ,item:'false'})}
+                {React.cloneElement(v, { style: { height: '100vh' } ,item:'false',sidebar: main.Components.content})}
               </animated.div>
             )
           )}
