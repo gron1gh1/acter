@@ -1,59 +1,13 @@
 
-import React, { useState, useContext, useRef, Fragment } from 'react';
+import React from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
-import Draggable from 'react-draggable';
-import { ItemSpring } from './Spring';
 
-import { AppContext } from './App';
-import produce from 'immer';
 
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-export function ItemAnimation({ item, children }) {
-  const main = useContext(AppContext);
-  const [ani_state, AniControl] = useState('use');
-  const boxRef = useRef();
-  function drag_start(e) {
-    AniControl('mouse_down');
-  }
-  function drag_ing(e, data) {
-  }
-  function drag_stop(e, data) {
-    if (e.clientX > boxRef.current.offsetWidth) {
-      main.SetLayout(true);
-      AniControl('not_use');
-      main.AddComponent(produce(draft => { draft.layout[0] = children; }));
-      //  main.SetOpen(false);
-      AniControl('restore');
-      //main.AddMenuItem(main.MenuItems.splice().concat(<Layout_item><MenuItem /></Layout_item>).concat(<Layout_item><Button_1 /></Layout_item>));
-    }
-    else {
-      AniControl('mouse_up');
-    }
-  }
-
-  return (
-
-    <Draggable onStart={drag_start}
-      onDrag={drag_ing}
-      onStop={drag_stop}
-      position={{ x: 0, y: 0 }}
-    >
-      <div>
-        <ItemSpring state={ani_state}>
-          {styles => (
-            <div ref={boxRef} style={styles} onDrop={(e)=>{console.log(e)}}>
-              {React.cloneElement(children)}
-            </div>
-          )}
-        </ItemSpring>
-      </div>
-    </Draggable>
-  )
-}
 export function MenuItem(style) {
   return (
     <Menu style={style}>
@@ -115,6 +69,7 @@ export function ButtonItem(style) {
     </Layout>
   )
 }
+
 export function Layout_1({ item, style }) {
 
   if (item === true) {
