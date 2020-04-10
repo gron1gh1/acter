@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
-
+import CSS from 'csstype';
 
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-export function MenuItem(style) {
+export function MenuItem(style: CSS.Properties) {
   return (
     <Menu style={style}>
       <Menu.Item>Menu</Menu.Item>
@@ -18,7 +18,7 @@ export function MenuItem(style) {
     </Menu>
   )
 }
-export function LoginItem(style) {
+export function LoginItem(style: CSS.Properties) {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -62,22 +62,26 @@ export function LoginItem(style) {
   )
 }
 
-export function ButtonItem(style) {
+export function ButtonItem(style: CSS.Properties) {
   return (
     <Layout style={style}>
       <Button type="primary">Primary</Button>
     </Layout>
   )
 }
-
-export function Layout_1({ item, style }) {
-
+interface IItem {
+  item?: boolean
+  style?: CSS.Properties;
+}
+export function Layout_1({ item = false, style = {} }: IItem) {
+  var item_header_style: CSS.Properties = {};
+  var item_content_style: CSS.Properties = {};
   if (item === true) {
-    var item_header_style = {
+    item_header_style = {
       background: `${Header_Color}`, height: '40px'
     }
 
-    var item_content_style = {
+    item_content_style = {
       background: `${Content_Color}`, height: '100px'
     }
   }
@@ -89,24 +93,29 @@ export function Layout_1({ item, style }) {
     </Layout>
   )
 }
-export function Layout_2({ item, style }) {
+export function Layout_2({ item = false, style = {} }: IItem) {
+  var item_header_style: CSS.Properties = {};
+  var item_content_style: CSS.Properties = {};
+  var sidebar_content_style: CSS.Properties = {};
   if (item === true) {
-    var item_header_style = {
+    item_header_style = {
       background: `${Header_Color}`, height: '40px'
     }
 
-    var item_content_style = {
+    item_content_style = {
       background: `${Content_Color}`, height: '100px'
     }
-    var sidebar_content_style = {
+    sidebar_content_style = {
       background: `${Sidebar_Color}`,
-      width: 50
+      width: '50px'
     }
   }
   return (
 
     <Layout style={style}>
-      <Header style={item_header_style} height={50}>Header</Header>
+    
+      {/* <Header style={item_header_style} height={50}>Header</Header> */}
+      <Header style={item_header_style}>Header</Header> 
       <Layout>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>Sider</Sider>
         <Layout.Content style={item_content_style}>Content</Layout.Content>
@@ -116,18 +125,21 @@ export function Layout_2({ item, style }) {
 
   )
 }
-export function Layout_3({ item, style }) {
+export function Layout_3({ item = false, style = {} }: IItem) {
+  var item_header_style: CSS.Properties = {};
+  var item_content_style: CSS.Properties = {};
+  var sidebar_content_style: CSS.Properties = {};
   if (item === true) {
-    var item_header_style = {
+    item_header_style = {
       background: `${Header_Color}`, height: '40px'
     }
 
-    var item_content_style = {
+    item_content_style = {
       background: `${Content_Color}`, height: '100px'
     }
-    var sidebar_content_style = {
+    sidebar_content_style = {
       background: `${Sidebar_Color}`,
-      width: 50
+      width: '50px'
     }
   }
   return (
@@ -145,19 +157,22 @@ export function Layout_3({ item, style }) {
 }
 
 
-export function Layout_4({ item, style,sidebar }) {
-  
+//export function Layout_4({ item, style,sidebar } : Item) {
+export function Layout_4({ item = false, style = {} }: IItem) {
+  var item_header_style: CSS.Properties = {};
+  var item_content_style: CSS.Properties = {};
+  var sidebar_content_style: CSS.Properties = {};
   if (item === true) {
-    var item_header_style = {
+    item_header_style = {
       background: `${Header_Color}`, height: '40px'
     }
 
-    var item_content_style = {
+    item_content_style = {
       background: `${Content_Color}`, height: '100px'
     }
-    var sidebar_content_style = {
+    sidebar_content_style = {
       background: `${Sidebar_Color}`,
-      width: 50
+      width: '50px'
     }
   }
   return (
@@ -165,13 +180,14 @@ export function Layout_4({ item, style,sidebar }) {
     <Layout style={style}>
 
       <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-      {sidebar && sidebar.map((v, i) =>
+        {/* {sidebar && sidebar.map((v, i) =>
             (
               <div>
                 {React.cloneElement(v)}
                 </div>
             )
-          )}
+          )} */}
+          Sidebar
       </Sider>
 
       <Layout>

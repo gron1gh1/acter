@@ -1,52 +1,72 @@
-import React,{useState,Fragment} from 'react';
+import React, { useState, Fragment } from 'react';
 import { Row, Col } from 'antd';
 import 'antd/dist/antd.css';
 import { Layout_1, Layout_2, Layout_3, Layout_4 } from './ItemComponent';
-import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
+import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 import produce from 'immer';
+import CSS from 'csstype';
 
 
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
+
+const getItemStyle = (
+    isDragging: boolean,
+    draggableStyle: DraggingStyle | NotDraggingStyle | undefined
+): React.CSSProperties => ({
     // some basic styles to make the items look a bit nicer
-    userSelect: 'none',
+    userSelect: "none",
     padding: grid * 2,
     margin: `0 0 ${grid}px 0`,
 
+    // change background colour if dragging
+    background: isDragging ? "lightgreen" : "grey",
+
+    // styles we need to apply on draggables
     ...draggableStyle
 });
 
-const getListStyle = isDraggingOver => ({
-    //background: isDraggingOver ? 'lightblue' : 'white',
+const getListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
+   // background: isDraggingOver ? "lightblue" : "lightgrey",
     padding: grid,
-    width: 250,
+    width: 250
 });
 
+
+interface IDragging {
+    state: boolean;
+    item: string | null;
+}
+
+interface IMainComponent{
+    layout: JSX.Element | null;
+    content: JSX.Element[] | null;
+}
+
 function App() {
-  const [dragging, SetDragging] = useState({ state: false, item: null });
-    const ItemList = {
+    const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null });
+    const ItemList: any = {
         layout_1: <Layout_1 />,
         layout_2: <Layout_2 />,
         layout_3: <Layout_3 />,
         layout_4: <Layout_4 />,
     };
-    const [MainComponents, AddComponent] = useState(
+    const [MainComponents, AddComponent] = useState<IMainComponent>(
         {
             layout: null,
             content: []
         }
     );
-    function onDragEnd(result) {
+    function onDragEnd(result: DropResult) {
         const { source, destination } = result;
         if (!destination || source.droppableId === destination.droppableId) return;
         AddComponent(produce(MainComponents, draft => {
-            draft.layout = ItemList[dragging.item];
+            draft.layout = dragging.item && ItemList[dragging.item];
         }));
 
         SetDragging({ state: false, item: null });
     }
-    function onDragStart(result) {
+    function onDragStart(result: DropResult) {
         SetDragging({ state: true, item: result.draggableId });
     }
     return (
