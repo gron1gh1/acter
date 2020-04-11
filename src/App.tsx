@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import { Row, Col, Menu } from 'antd';
 import 'antd/dist/antd.css';
-import { Layout_1, Layout_2, Layout_3, Layout_4 } from './ItemComponent';
+import { Layout_1, Layout_2, Layout_3, Layout_4, LoginItem, ButtonItem, MenuItem } from './ItemComponent';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 import produce from 'immer';
 import CSS from 'csstype';
@@ -28,11 +28,17 @@ const getItemStyle = (
 });
 
 const getListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-    // background: isDraggingOver ? "lightblue" : "lightgrey",
+    //    background: isDraggingOver ? "lightblue" : "lightgrey",
     padding: grid,
     width: 250
 });
+const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
+    background: isDraggingOver ? "lightblue" : "white",
 
+    height: '768px',
+    display: 'flex',
+    flexDirection: 'column',
+});
 
 interface IDragging {
     state: boolean;
@@ -47,10 +53,18 @@ interface IMainComponent {
 function App() {
     const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null });
     const ItemList: any = {
-        layout_1: <Layout_1 />,
-        layout_2: <Layout_2 />,
-        layout_3: <Layout_3 />,
-        layout_4: <Layout_4 />,
+        Layout: {
+            layout_1: <Layout_1 />,
+            layout_2: <Layout_2 />,
+            layout_3: <Layout_3 />,
+            layout_4: <Layout_4 />,
+        },
+        Component: {
+            login: <LoginItem />,
+            menu: <ButtonItem />,
+            button: <MenuItem />,
+
+        }
     };
     const [MainComponents, AddComponent] = useState<IMainComponent>(
         {
@@ -61,8 +75,9 @@ function App() {
     function onDragEnd(result: DropResult) {
         const { source, destination } = result;
         if (!destination || source.droppableId === destination.droppableId) return;
+        console.log(dragging.item);
         AddComponent(produce(MainComponents, draft => {
-            draft.layout = dragging.item && ItemList[dragging.item];
+            draft.layout = dragging.item && ItemList.Layout[dragging.item];
         }));
 
         SetDragging({ state: false, item: null });
@@ -86,41 +101,81 @@ function App() {
                                 }
                             >
                                 <Droppable droppableId="droppable">
-                            {(provided, snapshot) => (
-                                <div
-                                    ref={provided.innerRef}
-                                    style={getListStyle(snapshot.isDraggingOver)}>
-                                    {Object.keys(ItemList).map((v, idx) => {
-                                        return (
-                                            <Draggable
-                                                key={v}
-                                                draggableId={v}
-                                                index={idx}>
-                                                {(provided, snapshot) => (
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={getItemStyle(
-                                                            snapshot.isDragging,
-                                                            provided.draggableProps.style
-                                                        )}>
-                                                        {React.cloneElement(ItemList[v], { item: true })}
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        )
-                                    })}
+                                    {(provided, snapshot) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            style={getListStyle(snapshot.isDraggingOver)}>
+                                            {Object.keys(ItemList.Layout).map((v, idx) => {
+                                                return (
+                                                    <Draggable
+                                                        key={v}
+                                                        draggableId={v}
+                                                        index={idx}>
+                                                        {(provided, snapshot) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                style={getItemStyle(
+                                                                    snapshot.isDragging,
+                                                                    provided.draggableProps.style
+                                                                )}>
+                                                                {React.cloneElement(ItemList.Layout[v], { item: true })}
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                )
+                                            })}
+                                            {provided.placeholder}
+                                        </div>
+
+                                    )}
+                                </Droppable>
+                            </SubMenu>
+                            <SubMenu
+                                key="sub2"
+                                title={
+                                    <span>
+                                        <span>Component</span>
+                                    </span>
+                                }
+                            >
+                                <Droppable droppableId="droppable">
+                                    {(provided, snapshot) => (
+                                        <div
+                                            ref={provided.innerRef}
+                                            style={getListStyle(snapshot.isDraggingOver)}>
+                                            {Object.keys(ItemList.Component).map((v, idx) => {
+                                                return (
+                                                    <Draggable
+                                                        key={v}
+                                                        draggableId={v}
+                                                        index={idx}>
+                                                        {(provided, snapshot) => (
+                                                            <div
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                style={getItemStyle(
+                                                                    snapshot.isDragging,
+                                                                    provided.draggableProps.style
+                                                                )}>
+                                                                {React.cloneElement(ItemList.Component[v], { item: true })}
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                )
+                                            })}
 
 
-                                    {provided.placeholder}
-                                </div>
+                                            {provided.placeholder}
+                                        </div>
 
-                            )}
-                        </Droppable>
+                                    )}
+                                </Droppable>
                             </SubMenu>
                         </Menu>
-                        
+
                     </Col>
                     <Col flex="auto" style={{ background: 'lightgray' }}>
                         <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto', width: '1024px', height: '768px', background: 'white' }}>
@@ -128,7 +183,7 @@ function App() {
                                 {(provided, snapshot) => (
                                     <div
                                         ref={provided.innerRef}
-                                        style={{ height: '768px', display: 'flex', flexDirection: 'column' }}>
+                                        style={getMainViewStyle(snapshot.isDraggingOver)}>
 
                                         {MainComponents.layout && React.cloneElement(MainComponents.layout, { item: false, style: { flex: 1 } })}
                                         {provided.placeholder}

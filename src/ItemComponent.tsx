@@ -18,6 +18,7 @@ export function MenuItem(style: CSS.Properties) {
     </Menu>
   )
 }
+
 export function LoginItem(style: CSS.Properties) {
   const layout = {
     labelCol: { span: 8 },

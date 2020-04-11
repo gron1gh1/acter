@@ -1,0 +1,5 @@
+.MainView{
+    height: '768px';
+    display: 'flex'; 
+    flex-direction: 'column';
+}
