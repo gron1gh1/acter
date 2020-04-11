@@ -73,15 +73,16 @@ function App() {
         }
     );
     function onDragEnd(result: DropResult) {
-        const { source, destination } = result;
+        const { source, destination,type } = result;
         if (!destination || source.droppableId === destination.droppableId) return;
-        console.log(dragging.item);
+        console.log(type,dragging.item);
         AddComponent(produce(MainComponents, draft => {
             draft.layout = dragging.item && ItemList.Layout[dragging.item];
         }));
 
         SetDragging({ state: false, item: null });
     }
+
     function onDragStart(result: DropResult) {
         SetDragging({ state: true, item: result.draggableId });
     }
@@ -100,7 +101,7 @@ function App() {
                                     </span>
                                 }
                             >
-                                <Droppable droppableId="droppable">
+                                <Droppable droppableId="droppable" type="MAINVIEW">
                                     {(provided, snapshot) => (
                                         <div
                                             ref={provided.innerRef}
@@ -108,6 +109,7 @@ function App() {
                                             {Object.keys(ItemList.Layout).map((v, idx) => {
                                                 return (
                                                     <Draggable
+                                                    
                                                         key={v}
                                                         draggableId={v}
                                                         index={idx}>
@@ -140,7 +142,7 @@ function App() {
                                     </span>
                                 }
                             >
-                                <Droppable droppableId="droppable">
+                                <Droppable droppableId="droppable" type="COMPONENT">
                                     {(provided, snapshot) => (
                                         <div
                                             ref={provided.innerRef}
@@ -179,7 +181,7 @@ function App() {
                     </Col>
                     <Col flex="auto" style={{ background: 'lightgray' }}>
                         <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto', width: '1024px', height: '768px', background: 'white' }}>
-                            <Droppable droppableId="main-droppable">
+                            <Droppable droppableId="main-droppable" type="MAINVIEW">
                                 {(provided, snapshot) => (
                                     <div
                                         ref={provided.innerRef}
