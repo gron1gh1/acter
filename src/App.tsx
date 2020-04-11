@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { Row, Col } from 'antd';
+import { Row, Col, Menu } from 'antd';
 import 'antd/dist/antd.css';
 import { Layout_1, Layout_2, Layout_3, Layout_4 } from './ItemComponent';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
@@ -8,6 +8,7 @@ import CSS from 'csstype';
 
 
 const grid = 8;
+const { SubMenu } = Menu;
 
 
 const getItemStyle = (
@@ -27,7 +28,7 @@ const getItemStyle = (
 });
 
 const getListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-   // background: isDraggingOver ? "lightblue" : "lightgrey",
+    // background: isDraggingOver ? "lightblue" : "lightgrey",
     padding: grid,
     width: 250
 });
@@ -38,7 +39,7 @@ interface IDragging {
     item: string | null;
 }
 
-interface IMainComponent{
+interface IMainComponent {
     layout: JSX.Element | null;
     content: JSX.Element[] | null;
 }
@@ -69,12 +70,22 @@ function App() {
     function onDragStart(result: DropResult) {
         SetDragging({ state: true, item: result.draggableId });
     }
+
     return (
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
             <Fragment>
                 <Row style={{ height: '100vh' }}>
-                    <Col xs={4} style={{ background: 'white' }}>
-                        <Droppable droppableId="droppable">
+                    <Col flex="256px" style={{ background: 'white' }}>
+                        <Menu mode="inline" style={{ width: 256 }}>
+                            <SubMenu
+                                key="sub1"
+                                title={
+                                    <span>
+                                        <span>Layout</span>
+                                    </span>
+                                }
+                            >
+                                <Droppable droppableId="droppable">
                             {(provided, snapshot) => (
                                 <div
                                     ref={provided.innerRef}
@@ -107,8 +118,11 @@ function App() {
 
                             )}
                         </Droppable>
+                            </SubMenu>
+                        </Menu>
+                        
                     </Col>
-                    <Col xs={20} style={{ background: 'lightgray' }}>
+                    <Col flex="auto" style={{ background: 'lightgray' }}>
                         <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto', width: '1024px', height: '768px', background: 'white' }}>
                             <Droppable droppableId="main-droppable">
                                 {(provided, snapshot) => (
