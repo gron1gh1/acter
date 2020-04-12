@@ -2,7 +2,7 @@
 import React from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
 import CSS from 'csstype';
-
+import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -62,6 +62,9 @@ export function LoginItem(style: CSS.Properties) {
     </Form>
   )
 }
+const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
+  background: isDraggingOver ? "lightblue" : "white",
+});
 
 export function ButtonItem(style: CSS.Properties) {
   return (
@@ -73,6 +76,7 @@ export function ButtonItem(style: CSS.Properties) {
 interface IItem {
   item?: boolean
   style?: CSS.Properties;
+  
 }
 export function Layout_1({ item = false, style = {} }: IItem) {
   var item_header_style: CSS.Properties = {};
@@ -87,10 +91,24 @@ export function Layout_1({ item = false, style = {} }: IItem) {
     }
   }
   return (
-    <Layout style={style}>
-      <Header style={item_header_style}>Header</Header>
-      <Layout.Content style={item_content_style}>Content</Layout.Content>
-      <Footer style={item_header_style}>Footer</Footer>
+    <Layout style={style} >
+      <Header style={item_header_style}>
+        Header
+        </Header>
+      <Layout.Content style={item_content_style}>
+        <Droppable droppableId="droppableId-1" type="COMPONENT">
+          {(provided, snapshot) => (
+            <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
+              Content
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+
+      </Layout.Content>
+      <Footer style={item_header_style}>
+        Footer
+        </Footer>
     </Layout>
   )
 }
@@ -114,9 +132,9 @@ export function Layout_2({ item = false, style = {} }: IItem) {
   return (
 
     <Layout style={style}>
-    
+
       {/* <Header style={item_header_style} height={50}>Header</Header> */}
-      <Header style={item_header_style}>Header</Header> 
+      <Header style={item_header_style}>Header</Header>
       <Layout>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>Sider</Sider>
         <Layout.Content style={item_content_style}>Content</Layout.Content>

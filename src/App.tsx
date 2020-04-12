@@ -32,6 +32,7 @@ const getListStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     padding: grid,
     width: 250
 });
+
 const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     background: isDraggingOver ? "lightblue" : "white",
 
@@ -73,9 +74,9 @@ function App() {
         }
     );
     function onDragEnd(result: DropResult) {
-        const { source, destination,type } = result;
+        const { source, destination, type } = result;
         if (!destination || source.droppableId === destination.droppableId) return;
-        console.log(type,dragging.item);
+        console.log(type, dragging.item);
         AddComponent(produce(MainComponents, draft => {
             draft.layout = dragging.item && ItemList.Layout[dragging.item];
         }));
@@ -85,7 +86,7 @@ function App() {
 
     function onDragUpdate(result: DropResult) {
     }
-    
+
     function onDragStart(result: DropResult) {
         SetDragging({ state: true, item: result.draggableId });
     }
@@ -152,7 +153,7 @@ function App() {
                                             {Object.keys(ItemList.Component).map((v, idx) => {
                                                 return (
                                                     <Draggable
-                                                        
+
                                                         key={v}
                                                         draggableId={v}
                                                         index={idx}>
