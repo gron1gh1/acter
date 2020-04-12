@@ -83,12 +83,15 @@ function App() {
         SetDragging({ state: false, item: null });
     }
 
+    function onDragUpdate(result: DropResult) {
+    }
+    
     function onDragStart(result: DropResult) {
         SetDragging({ state: true, item: result.draggableId });
     }
 
     return (
-        <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        <DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
             <Fragment>
                 <Row style={{ height: '100vh' }}>
                     <Col flex="256px" style={{ background: 'white' }}>
@@ -101,7 +104,7 @@ function App() {
                                     </span>
                                 }
                             >
-                                <Droppable droppableId="droppable" type="MAINVIEW">
+                                <Droppable droppableId="MAINVIEW" type="MAINVIEW">
                                     {(provided, snapshot) => (
                                         <div
                                             ref={provided.innerRef}
@@ -109,7 +112,6 @@ function App() {
                                             {Object.keys(ItemList.Layout).map((v, idx) => {
                                                 return (
                                                     <Draggable
-                                                    
                                                         key={v}
                                                         draggableId={v}
                                                         index={idx}>
@@ -142,7 +144,7 @@ function App() {
                                     </span>
                                 }
                             >
-                                <Droppable droppableId="droppable" type="COMPONENT">
+                                <Droppable droppableId="COMPONENT" type="COMPONENT">
                                     {(provided, snapshot) => (
                                         <div
                                             ref={provided.innerRef}
@@ -150,6 +152,7 @@ function App() {
                                             {Object.keys(ItemList.Component).map((v, idx) => {
                                                 return (
                                                     <Draggable
+                                                        
                                                         key={v}
                                                         draggableId={v}
                                                         index={idx}>
