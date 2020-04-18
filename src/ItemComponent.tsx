@@ -74,9 +74,26 @@ export function ButtonItem(style: CSS.Properties) {
   )
 }
 interface IItem {
-  item?: boolean
+  item?: boolean;
   style?: CSS.Properties;
-  
+}
+interface IDroppable {
+  id: string;
+  type: string;
+  children: React.ReactNode;
+}
+
+function ItemDroppable({ id, type, children }: IDroppable) {
+  return (
+    <Droppable droppableId={id} type={type}>
+      {(provided, snapshot) => (
+        <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
+          {children}
+          {provided.placeholder}
+        </div>
+      )}
+    </Droppable>
+  )
 }
 export function Layout_1({ item = false, style = {} }: IItem) {
   var item_header_style: CSS.Properties = {};
@@ -96,14 +113,9 @@ export function Layout_1({ item = false, style = {} }: IItem) {
         Header
         </Header>
       <Layout.Content style={item_content_style}>
-        <Droppable droppableId="droppableId-1" type="COMPONENT">
-          {(provided, snapshot) => (
-            <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
-              Content
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
+        <ItemDroppable id="droppableId-1" type="COMPONENT">
+          Content
+        </ItemDroppable>
 
       </Layout.Content>
       <Footer style={item_header_style}>
@@ -136,10 +148,18 @@ export function Layout_2({ item = false, style = {} }: IItem) {
       {/* <Header style={item_header_style} height={50}>Header</Header> */}
       <Header style={item_header_style}>Header</Header>
       <Layout>
-        <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>Sider</Sider>
-        <Layout.Content style={item_content_style}>Content</Layout.Content>
+        <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
+          Sider
+        </Sider>
+        <Layout.Content style={item_content_style}>
+          <ItemDroppable id="droppableId-1" type="COMPONENT">
+            Content2
+          </ItemDroppable>
+        </Layout.Content>
       </Layout>
-      <Footer style={item_header_style}>Footer</Footer>
+      <Footer style={item_header_style}>
+        Footer
+      </Footer>
     </Layout>
 
   )
@@ -164,12 +184,22 @@ export function Layout_3({ item = false, style = {} }: IItem) {
   return (
 
     <Layout style={style}>
-      <Header style={item_header_style}>Header</Header>
+      <Header style={item_header_style}>
+        Header
+      </Header>
       <Layout>
-        <Layout.Content style={item_content_style}>Content</Layout.Content>
-        <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>Sider</Sider>
+        <Layout.Content style={item_content_style}>
+          <ItemDroppable id="droppableId-1" type="COMPONENT">
+            Content
+          </ItemDroppable>
+        </Layout.Content>
+        <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
+          Sider
+        </Sider>
       </Layout>
-      <Footer style={item_header_style}>Footer</Footer>
+      <Footer style={item_header_style}>
+        Footer
+      </Footer>
     </Layout>
 
   )
@@ -214,10 +244,14 @@ export function Layout_4({ item = false, style = {} }: IItem) {
           Header
         </Header>
         <Layout.Content style={item_content_style}>
-          Content
+          <ItemDroppable id="droppableId-1" type="COMPONENT">
+            Content
+          </ItemDroppable>
         </Layout.Content>
         <Footer style={item_header_style}>
-          Footer
+        <ItemDroppable id="droppableId-2" type="COMPONENT">
+            Content
+          </ItemDroppable>
         </Footer>
       </Layout>
     </Layout>

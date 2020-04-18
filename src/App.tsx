@@ -5,7 +5,7 @@ import { Layout_1, Layout_2, Layout_3, Layout_4, LoginItem, ButtonItem, MenuItem
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 import produce from 'immer';
 import CSS from 'csstype';
-
+import { Scrollbars } from 'react-custom-scrollbars';
 
 const grid = 8;
 const { SubMenu } = Menu;
@@ -95,8 +95,9 @@ function App() {
         <DragDropContext onDragStart={onDragStart} onDragUpdate={onDragUpdate} onDragEnd={onDragEnd}>
             <Fragment>
                 <Row style={{ height: '100vh' }}>
-                    <Col flex="256px" style={{ background: 'white' }}>
-                        <Menu mode="inline" style={{ width: 256 }}>
+                    <Col flex="264px" style={{ background: 'white',overflowY:'hidden',height:'100vh' }}>
+                        <Scrollbars style={{ height:'100vh' }} autoHide>
+                        <Menu mode="inline" style={{ width: 256,borderRight: 'white 1px solid' }}>
                             <SubMenu
                                 key="sub1"
                                 title={
@@ -181,7 +182,7 @@ function App() {
                                 </Droppable>
                             </SubMenu>
                         </Menu>
-
+                        </Scrollbars>
                     </Col>
                     <Col flex="auto" style={{ background: 'lightgray' }}>
                         <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto', width: '1024px', height: '768px', background: 'white' }}>
