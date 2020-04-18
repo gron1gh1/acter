@@ -1,4 +1,5 @@
 import React, { useState, Fragment } from 'react';
+
 import { Row, Col, Menu } from 'antd';
 import 'antd/dist/antd.css';
 import { Layout_1, Layout_2, Layout_3, Layout_4, LoginItem, ButtonItem, MenuItem } from './ItemComponent';
@@ -6,7 +7,9 @@ import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDr
 import produce from 'immer';
 import CSS from 'csstype';
 import { Scrollbars } from 'react-custom-scrollbars';
-
+import { useSelector,useDispatch } from 'react-redux';
+import {IDragging,IMainComponent,IMainState} from './Interface';
+import {ActionCreators} from './reducer';
 const grid = 8;
 const { SubMenu } = Menu;
 
@@ -41,15 +44,7 @@ const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     flexDirection: 'column',
 });
 
-interface IDragging {
-    state: boolean;
-    item: string | null;
-}
 
-interface IMainComponent {
-    layout: JSX.Element | null;
-    content: JSX.Element[] | null;
-}
 
 function App() {
     const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null });
@@ -67,20 +62,18 @@ function App() {
 
         }
     };
-    const [MainComponents, AddComponent] = useState<IMainComponent>(
-        {
-            layout: null,
-            content: []
-        }
-    );
+
+    const dispatch = useDispatch();
+    const MainLayout = useSelector<IMainState>(state => state.Component.Layout);
+    
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;
         if (!destination || source.droppableId === destination.droppableId) return;
         console.log(type, dragging.item);
-        AddComponent(produce(MainComponents, draft => {
-            draft.layout = dragging.item && ItemList.Layout[dragging.item];
-        }));
+        
+        dragging.item && dispatch(ActionCreators.setLayout(ItemList.Layout[dragging.item]));
 
+        console.log(MainLayout);
         SetDragging({ state: false, item: null });
     }
 
@@ -192,7 +185,7 @@ function App() {
                                         ref={provided.innerRef}
                                         style={getMainViewStyle(snapshot.isDraggingOver)}>
 
-                                        {MainComponents.layout && React.cloneElement(MainComponents.layout, { item: false, style: { flex: 1 } })}
+                                        {MainLayout && React.cloneElement(MainLayout as React.ReactElement, { item: false, style: { flex: 1 } })}
                                         {provided.placeholder}
                                     </div>
 

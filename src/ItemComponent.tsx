@@ -3,6 +3,7 @@ import React from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
 import CSS from 'csstype';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
+import {IDroppable,IItem} from './Interface';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -73,15 +74,7 @@ export function ButtonItem(style: CSS.Properties) {
     </Layout>
   )
 }
-interface IItem {
-  item?: boolean;
-  style?: CSS.Properties;
-}
-interface IDroppable {
-  id: string;
-  type: string;
-  children: React.ReactNode;
-}
+
 
 function ItemDroppable({ id, type, children }: IDroppable) {
   return (
