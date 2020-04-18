@@ -3,7 +3,8 @@ import React from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
 import CSS from 'csstype';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import {IDroppable,IItem} from './Interface';
+import {IDroppable,IItem,IMainState} from './Interface';
+import {useDispatch,useSelector} from 'react-redux';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -89,6 +90,8 @@ function ItemDroppable({ id, type, children }: IDroppable) {
   )
 }
 export function Layout_1({ item = false, style = {} }: IItem) {
+  const Content : React.ReactElement[] = useSelector((state : IMainState) => state.Content);
+
   var item_header_style: CSS.Properties = {};
   var item_content_style: CSS.Properties = {};
   if (item === true) {
@@ -107,7 +110,13 @@ export function Layout_1({ item = false, style = {} }: IItem) {
         </Header>
       <Layout.Content style={item_content_style}>
         <ItemDroppable id="droppableId-1" type="COMPONENT">
-          Content
+          {Content && Content.map((v, i) =>
+            (
+              <div>
+                {React.cloneElement(v)}
+                </div>
+            )
+          )} 
         </ItemDroppable>
 
       </Layout.Content>

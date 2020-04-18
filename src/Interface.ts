@@ -9,8 +9,10 @@ export interface IMainComponent {
     layout: JSX.Element | null;
     content: JSX.Element[] | null;
 }
+
 export interface IMainState{
-    Component: any;
+   Layout : React.ReactElement | null;
+   Content: React.ReactElement[];
 }
 
 export interface IItem {
@@ -22,4 +24,4 @@ export interface IDroppable {
     id: string;
     type: string;
     children: React.ReactNode;
-  }
+}

@@ -64,7 +64,7 @@ function App() {
     };
 
     const dispatch = useDispatch();
-    const MainLayout = useSelector<IMainState>(state => state.Component.Layout);
+    const MainLayout : (React.ReactElement | null) = useSelector((state : IMainState) => state.Layout);
     
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;
@@ -73,7 +73,6 @@ function App() {
         
         dragging.item && dispatch(ActionCreators.setLayout(ItemList.Layout[dragging.item]));
 
-        console.log(MainLayout);
         SetDragging({ state: false, item: null });
     }
 
@@ -185,7 +184,7 @@ function App() {
                                         ref={provided.innerRef}
                                         style={getMainViewStyle(snapshot.isDraggingOver)}>
 
-                                        {MainLayout && React.cloneElement(MainLayout as React.ReactElement, { item: false, style: { flex: 1 } })}
+                                        {MainLayout && React.cloneElement(MainLayout, { item: false, style: { flex: 1 } })}
                                         {provided.placeholder}
                                     </div>
 
