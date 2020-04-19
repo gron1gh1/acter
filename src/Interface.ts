@@ -5,14 +5,9 @@ export interface IDragging {
     item: string | null;
 }
 
-export interface IMainComponent {
-    layout: JSX.Element | null;
-    content: JSX.Element[] | null;
-}
-
-export interface IMainState{
-   Layout : React.ReactElement | null;
-   Content: React.ReactElement[];
+export interface IMainState {
+    Layout: React.ReactElement | null;
+    Content: React.ReactElement[];
 }
 
 export interface IItem {
