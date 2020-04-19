@@ -110,7 +110,7 @@ export function Layout_1({ item = false, style = {} }: IItem) {
         </Header>
       <Layout.Content style={item_content_style}>
         <ItemDroppable id="Content" type="COMPONENT">
-          {Content && Content.map((v, i) =>
+          {!item && Content && Content.map((v, i) =>
             (
 
               <div>
@@ -158,7 +158,7 @@ export function Layout_2({ item = false, style = {} }: IItem) {
         </Sider>
         <Layout.Content style={item_content_style}>
           <ItemDroppable id="Content" type="COMPONENT">
-            {Content && Content.map((v, i) =>
+            {!item && Content && Content.map((v, i) =>
               (
 
                 <div>
@@ -204,7 +204,7 @@ export function Layout_3({ item = false, style = {} }: IItem) {
       <Layout>
         <Layout.Content style={item_content_style}>
           <ItemDroppable id="Content" type="COMPONENT">
-            {Content && Content.map((v, i) =>
+            {!item &&Content && Content.map((v, i) =>
               (
 
                 <div>
@@ -268,7 +268,7 @@ export function Layout_4({ item = false, style = {} }: IItem) {
         </Header>
         <Layout.Content style={item_content_style}>
           <ItemDroppable id="Content" type="COMPONENT">
-            {Content && Content.map((v, i) =>
+            {!item && Content && Content.map((v, i) =>
               (
 
                 <div>
