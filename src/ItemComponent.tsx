@@ -117,15 +117,15 @@ export function Layout_1({ item = false, style = {} }: IItem) {
   return (
     <Layout style={style} >
       <Header style={item_header_style}>
-        <ItemDroppable id="Header" type="COMPONENT" />
+      {!item && <ItemDroppable id="Header" type="COMPONENT" />}
       </Header>
       <Layout.Content style={item_content_style}>
-        <ItemDroppable id="Content" type="COMPONENT" />
+      {!item && <ItemDroppable id="Content" type="COMPONENT" />}
 
 
       </Layout.Content>
       <Footer style={item_header_style}>
-        <ItemDroppable id="Footer" type="COMPONENT" />
+      {!item && <ItemDroppable id="Footer" type="COMPONENT" />}
       </Footer>
     </Layout>
   )
@@ -155,18 +155,18 @@ export function Layout_2({ item = false, style = {} }: IItem) {
 
       {/* <Header style={item_header_style} height={50}>Header</Header> */}
       <Header style={item_header_style}>
-        <ItemDroppable id="Header" type="COMPONENT" />
+      {!item && <ItemDroppable id="Header" type="COMPONENT" />}
       </Header>
       <Layout>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-          <ItemDroppable id="Sidebar" type="COMPONENT" />
+        {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />}
         </Sider>
         <Layout.Content style={item_content_style}>
-          <ItemDroppable id="Content" type="COMPONENT" />
+        {!item && <ItemDroppable id="Content" type="COMPONENT" />}
         </Layout.Content>
       </Layout>
       <Footer style={item_header_style}>
-        <ItemDroppable id="Footer" type="COMPONENT" />
+      {!item &&<ItemDroppable id="Footer" type="COMPONENT" />}
       </Footer>
     </Layout>
 
@@ -195,18 +195,18 @@ export function Layout_3({ item = false, style = {} }: IItem) {
 
     <Layout style={style}>
       <Header style={item_header_style}>
-        <ItemDroppable id="Header" type="COMPONENT" />
+      {!item &&<ItemDroppable id="Header" type="COMPONENT" />}
       </Header>
       <Layout>
         <Layout.Content style={item_content_style}>
-          <ItemDroppable id="Content" type="COMPONENT" />
+        {!item && <ItemDroppable id="Content" type="COMPONENT" />}
         </Layout.Content>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-          <ItemDroppable id="Sidebar" type="COMPONENT" />
+        {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />}
         </Sider>
       </Layout>
       <Footer style={item_header_style}>
-        <ItemDroppable id="Footer" type="COMPONENT" />
+      {!item && <ItemDroppable id="Footer" type="COMPONENT" />}
       </Footer>
     </Layout>
 
@@ -239,18 +239,18 @@ export function Layout_4({ item = false, style = {} }: IItem) {
     <Layout style={style}>
 
       <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-        <ItemDroppable id="Sidebar" type="COMPONENT" />
+        {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />}
       </Sider>
 
       <Layout>
         <Header style={item_header_style}>
-          <ItemDroppable id="Header" type="COMPONENT" />
+        {!item && <ItemDroppable id="Header" type="COMPONENT" />}
         </Header>
         <Layout.Content style={item_content_style}>
-          <ItemDroppable id="Content" type="COMPONENT" />
+        {!item && <ItemDroppable id="Content" type="COMPONENT" />}
         </Layout.Content>
         <Footer style={item_header_style}>
-          <ItemDroppable id="Footer" type="COMPONENT" />
+        {!item && <ItemDroppable id="Footer" type="COMPONENT" />}
         </Footer>
       </Layout>
     </Layout>
