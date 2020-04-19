@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout_1, Layout_2, Layout_3, Layout_4, LoginItem, ButtonItem, MenuItem } from './ItemComponent';
-
-export const ItemList: any = { // Sidebar Menu ItemList
+import {IMenuState} from './Interface';
+export const ItemList: IMenuState = { // Sidebar Menu ItemList
     MAINVIEW: {
         layout_1: <Layout_1 />,
         layout_2: <Layout_2 />,

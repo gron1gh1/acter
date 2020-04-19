@@ -2,7 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { Row, Col} from 'antd';
 import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux';
-import { IDragging, IMainState } from './Interface';
+import { IDragging, IMainState,IMenuState } from './Interface';
 import { ActionCreators } from './reducer';
 import Sidebar from './Sidebar';
 import {ItemList} from './StaticData';
@@ -22,10 +22,12 @@ function App() {
     const MainLayout: (React.ReactElement | null) = useSelector((state: IMainState) => state.Layout); // Get Data from Reducer to this 
 
     function onDragEnd(result: DropResult) {
-        const { source, destination, type } = result;
+        const { source, destination, type} = result;
+        let _type = type as keyof IMenuState;
         if (!destination || source.droppableId === destination.droppableId) return;
+        
         console.log(type, dragging.item, destination.droppableId);
-        dragging.item && dispatch(ActionCreators.addComponent(destination.droppableId, ItemList[type][dragging.item]));
+        dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(destination.droppableId, ItemList[_type][dragging.item]));
         SetDragging({ state: false, item: null });
     }
 

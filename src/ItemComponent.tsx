@@ -3,8 +3,8 @@ import React from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
 import CSS from 'csstype';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState } from './Interface';
-import { useDispatch, useSelector } from 'react-redux';
+import { IDroppable, IItem, IMainState, IMenuState } from './Interface';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -77,12 +77,21 @@ export function ButtonItem(style: CSS.Properties) {
 }
 
 
-function ItemDroppable({ id, type, children }: IDroppable) {
+function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
+  const MainState: IMainState = useSelector((state: IMainState) => state);
+  const key = MainState[id] as React.ReactElement[];
+
   return (
     <Droppable droppableId={id} type={type}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
-          {children}
+          {key && key.map((v, i) =>
+            (
+              <div>
+                {React.cloneElement(v)}
+              </div>
+            )
+          )}
           {provided.placeholder}
         </div>
       )}
@@ -103,27 +112,21 @@ export function Layout_1({ item = false, style = {} }: IItem) {
       background: `${Content_Color}`, height: '100px'
     }
   }
+
+
   return (
     <Layout style={style} >
       <Header style={item_header_style}>
-        Header
-        </Header>
+        <ItemDroppable id="Header" type="COMPONENT" />
+      </Header>
       <Layout.Content style={item_content_style}>
-        <ItemDroppable id="Content" type="COMPONENT">
-          {!item && Content && Content.map((v, i) =>
-            (
+        <ItemDroppable id="Content" type="COMPONENT" />
 
-              <div>
-                {React.cloneElement(v)}
-              </div>
-            )
-          )}
-        </ItemDroppable>
 
       </Layout.Content>
       <Footer style={item_header_style}>
-        Footer
-        </Footer>
+        <ItemDroppable id="Footer" type="COMPONENT" />
+      </Footer>
     </Layout>
   )
 }
@@ -151,26 +154,19 @@ export function Layout_2({ item = false, style = {} }: IItem) {
     <Layout style={style}>
 
       {/* <Header style={item_header_style} height={50}>Header</Header> */}
-      <Header style={item_header_style}>Header</Header>
+      <Header style={item_header_style}>
+        <ItemDroppable id="Header" type="COMPONENT" />
+      </Header>
       <Layout>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-          Sider
+          <ItemDroppable id="Sidebar" type="COMPONENT" />
         </Sider>
         <Layout.Content style={item_content_style}>
-          <ItemDroppable id="Content" type="COMPONENT">
-            {!item && Content && Content.map((v, i) =>
-              (
-
-                <div>
-                  {React.cloneElement(v)}
-                </div>
-              )
-            )}
-          </ItemDroppable>
+          <ItemDroppable id="Content" type="COMPONENT" />
         </Layout.Content>
       </Layout>
       <Footer style={item_header_style}>
-        Footer
+        <ItemDroppable id="Footer" type="COMPONENT" />
       </Footer>
     </Layout>
 
@@ -199,27 +195,18 @@ export function Layout_3({ item = false, style = {} }: IItem) {
 
     <Layout style={style}>
       <Header style={item_header_style}>
-        Header
+        <ItemDroppable id="Header" type="COMPONENT" />
       </Header>
       <Layout>
         <Layout.Content style={item_content_style}>
-          <ItemDroppable id="Content" type="COMPONENT">
-            {!item &&Content && Content.map((v, i) =>
-              (
-
-                <div>
-                  {React.cloneElement(v)}
-                </div>
-              )
-            )}
-          </ItemDroppable>
+          <ItemDroppable id="Content" type="COMPONENT" />
         </Layout.Content>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-          Sider
+          <ItemDroppable id="Sidebar" type="COMPONENT" />
         </Sider>
       </Layout>
       <Footer style={item_header_style}>
-        Footer
+        <ItemDroppable id="Footer" type="COMPONENT" />
       </Footer>
     </Layout>
 
@@ -252,36 +239,18 @@ export function Layout_4({ item = false, style = {} }: IItem) {
     <Layout style={style}>
 
       <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-        {/* {sidebar && sidebar.map((v, i) =>
-            (
-              <div>
-                {React.cloneElement(v)}
-                </div>
-            )
-          )} */}
-          Sidebar
+        <ItemDroppable id="Sidebar" type="COMPONENT" />
       </Sider>
 
       <Layout>
         <Header style={item_header_style}>
-          Header
+          <ItemDroppable id="Header" type="COMPONENT" />
         </Header>
         <Layout.Content style={item_content_style}>
-          <ItemDroppable id="Content" type="COMPONENT">
-            {!item && Content && Content.map((v, i) =>
-              (
-
-                <div>
-                  {React.cloneElement(v)}
-                </div>
-              )
-            )}
-          </ItemDroppable>
+          <ItemDroppable id="Content" type="COMPONENT" />
         </Layout.Content>
         <Footer style={item_header_style}>
-          <ItemDroppable id="Footer" type="COMPONENT">
-            Content
-          </ItemDroppable>
+          <ItemDroppable id="Footer" type="COMPONENT" />
         </Footer>
       </Layout>
     </Layout>

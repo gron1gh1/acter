@@ -61,7 +61,8 @@ export default function Sidebar() {
                                                         snapshot.isDragging,
                                                         provided.draggableProps.style
                                                     )}>
-                                                    {React.cloneElement(ItemList.MAINVIEW[v], { item: true })}
+                                                        
+                                                    {React.cloneElement(ItemList['MAINVIEW'][v] as React.ReactElement, { item: true })}
                                                 </div>
                                             )}
                                         </Draggable>
@@ -102,7 +103,7 @@ export default function Sidebar() {
                                                         snapshot.isDragging,
                                                         provided.draggableProps.style
                                                     )}>
-                                                    {React.cloneElement(ItemList.COMPONENT[v], { item: true })}
+                                                    {React.cloneElement(ItemList['COMPONENT'][v] as React.ReactElement, { item: true })}
                                                 </div>
                                             )}
                                         </Draggable>

@@ -7,7 +7,18 @@ export interface IDragging {
 
 export interface IMainState {
     Layout: React.ReactElement | null;
+    Header: React.ReactElement[];
     Content: React.ReactElement[];
+    Sidebar: React.ReactElement[];
+    Footer: React.ReactElement[];
+}
+export interface IMenuState{
+    MAINVIEW: {
+        [key: string]: React.ReactElement | null
+    };
+    COMPONENT : {
+        [key: string]: React.ReactElement | null
+    };
 }
 
 export interface IItem {
@@ -15,8 +26,7 @@ export interface IItem {
     style?: CSS.Properties;
 }
 
-export interface IDroppable {
-    id: string;
-    type: string;
-    children: React.ReactNode;
+export interface IDroppable<T,Q> {
+    id: keyof T;
+    type: keyof Q;
 }
