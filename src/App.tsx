@@ -49,13 +49,13 @@ const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
 function App() {
     const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null });
     const ItemList: any = {
-        Layout: {
+        MAINVIEW: {
             layout_1: <Layout_1 />,
             layout_2: <Layout_2 />,
             layout_3: <Layout_3 />,
             layout_4: <Layout_4 />,
         },
-        Component: {
+        COMPONENT: {
             login: <LoginItem />,
             menu: <ButtonItem />,
             button: <MenuItem />,
@@ -69,10 +69,12 @@ function App() {
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;
         if (!destination || source.droppableId === destination.droppableId) return;
-        console.log(type, dragging.item);
+        console.log(type, dragging.item, destination.droppableId);
         
-        dragging.item && dispatch(ActionCreators.setLayout(ItemList.Layout[dragging.item]));
+        //dragging.item && dispatch(ActionCreators.setLayout(ItemList[type][dragging.item]));
+        dragging.item && dispatch(ActionCreators.addComponent(destination.droppableId,ItemList[type][dragging.item]));
 
+       
         SetDragging({ state: false, item: null });
     }
 
@@ -103,7 +105,7 @@ function App() {
                                         <div
                                             ref={provided.innerRef}
                                             style={getListStyle(snapshot.isDraggingOver)}>
-                                            {Object.keys(ItemList.Layout).map((v, idx) => {
+                                            {Object.keys(ItemList.MAINVIEW).map((v, idx) => {
                                                 return (
                                                     <Draggable
                                                         key={v}
@@ -118,7 +120,7 @@ function App() {
                                                                     snapshot.isDragging,
                                                                     provided.draggableProps.style
                                                                 )}>
-                                                                {React.cloneElement(ItemList.Layout[v], { item: true })}
+                                                                {React.cloneElement(ItemList.MAINVIEW[v], { item: true })}
                                                             </div>
                                                         )}
                                                     </Draggable>
@@ -143,7 +145,7 @@ function App() {
                                         <div
                                             ref={provided.innerRef}
                                             style={getListStyle(snapshot.isDraggingOver)}>
-                                            {Object.keys(ItemList.Component).map((v, idx) => {
+                                            {Object.keys(ItemList.COMPONENT).map((v, idx) => {
                                                 return (
                                                     <Draggable
 
@@ -159,7 +161,7 @@ function App() {
                                                                     snapshot.isDragging,
                                                                     provided.draggableProps.style
                                                                 )}>
-                                                                {React.cloneElement(ItemList.Component[v], { item: true })}
+                                                                {React.cloneElement(ItemList.COMPONENT[v], { item: true })}
                                                             </div>
                                                         )}
                                                     </Draggable>
@@ -178,7 +180,7 @@ function App() {
                     </Col>
                     <Col flex="auto" style={{ background: 'lightgray' }}>
                         <div style={{ position: 'absolute', top: 0, bottom: 0, left: 0, right: 0, margin: 'auto', width: '1024px', height: '768px', background: 'white' }}>
-                            <Droppable droppableId="main-droppable" type="MAINVIEW">
+                            <Droppable droppableId="Layout" type="MAINVIEW">
                                 {(provided, snapshot) => (
                                     <div
                                         ref={provided.innerRef}

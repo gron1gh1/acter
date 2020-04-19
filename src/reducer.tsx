@@ -10,14 +10,17 @@ const InitState : IMainState = {
 
 // immer-Reducer
 class MainReducer extends ImmerReducer<IMainState>{
-    addComponent(target: string,item : JSX.Element)
+    addComponent(target: string, item : JSX.Element) : void
     {
+        let draft = this.draftState[target as keyof IMainState];
         
-    }
-
-    setLayout(item : JSX.Element)
-    {
-        this.draftState.Layout = item;
+        if(Array.isArray(draft)) // IMainState >> React.ReactElement or React.ReactElement[] Check
+        {
+            let draft_array = draft as Array<JSX.Element>;
+            draft_array.push(item);
+        }
+        else
+            this.draftState[target as keyof IMainState] = item as any;
     }
 }
 
