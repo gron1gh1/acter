@@ -14,6 +14,36 @@ const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     display: 'flex',
     flexDirection: 'column',
 });
+interface IMainView{
+    MainLayout: React.ReactElement | null;
+}
+function MainView({MainLayout}: IMainView) {
+    return (
+        <div>
+            <div style={{ marginLeft: '-870px' }}>
+
+                <Radio.Group defaultValue="PREVIEW" buttonStyle="solid">
+                    <Radio.Button value="PREVIEW">PREVIEW</Radio.Button>
+                    <Radio.Button value="CODE">CODE</Radio.Button>
+                </Radio.Group>
+            </div>
+            <div style={{ width: '1024px', flexBasis: '768px', background: 'white', overflowY: 'visible' }}>
+                <Droppable droppableId="Layout" type="MAINVIEW">
+                    {(provided, snapshot) => (
+                        <div
+                            ref={provided.innerRef}
+                            style={getMainViewStyle(snapshot.isDraggingOver)}>
+
+                            {MainLayout && React.cloneElement(MainLayout, { item: false })}
+                            {provided.placeholder}
+                        </div>
+
+                    )}
+                </Droppable>
+            </div>
+        </div>
+    )
+}
 
 function App() {
     const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null }); // Item information at start of drag
@@ -43,28 +73,13 @@ function App() {
                     <Col flex="264px" style={{ background: 'white', overflowY: 'hidden', height: '100vh' }}>
                         <Sidebar />
                     </Col>
-                    <Col flex="auto" style={{ background: 'lightgray', height:'100vh',
-                    display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}}>
-                        <div style={{marginLeft:'-870px'}}>
-                        <Radio.Group defaultValue="PREVIEW" buttonStyle="solid">
-                            <Radio.Button value="PREVIEW">PREVIEW</Radio.Button>
-                            <Radio.Button value="CODE">CODE</Radio.Button>
-                        </Radio.Group>
-                        </div>
-                        <div style={{ width: '1024px', height: '768px', background: 'white' }}>
-                            <Droppable droppableId="Layout" type="MAINVIEW">
-                                {(provided, snapshot) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        style={getMainViewStyle(snapshot.isDraggingOver)}>
+                    <Col flex="auto" style={{
+                        background: 'lightgray', height: '100vh',
+                        display: 'flex', flexDirection: 'column',
+                        alignItems: 'center', justifyContent: 'center',
+                    }}>
 
-                                        {MainLayout && React.cloneElement(MainLayout, { item: false, style: { flex: 1 } })}
-                                        {provided.placeholder}
-                                    </div>
-
-                                )}
-                            </Droppable>
-                        </div>
+                        <MainView MainLayout={MainLayout}/>
                     </Col>
                 </Row>
             </Fragment>
