@@ -11,7 +11,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     background: isDraggingOver ? "lightblue" : "white",
     width: '1024px',
-    minHeight: '170px',
+    minHeight: '105px',
     display: 'flex',
     flexDirection: 'column',
 });

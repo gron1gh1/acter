@@ -6,6 +6,8 @@ import CSS from 'csstype';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 import { IDroppable, IItem, IMainState, IMenuState } from './Interface';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { stringify } from 'querystring';
+import { format } from 'path';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -67,7 +69,8 @@ export function LoginItem(style: CSS.Properties) {
 }
 const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   background: isDraggingOver ? "lightblue" : "white",
-  width: '100vh',
+  width: '100%',
+  minHeight:'85px'
 });
 
 export function ButtonItem(style: CSS.Properties) {
@@ -101,11 +104,17 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   )
 }
 
-function MakeArea() {
+interface IArea
+{
+  key: number;
+}
+
+function MakeArea({key} : IArea) {
   const [m_state, SetMouse] = useState('leave');
   const setStyle: React.CSSProperties = {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    height: '100px', width: '100vh',
+    background:'GhostWhite',
+    textAlign:'center',
+    width: '100%',
     cursor: m_state !== 'click' ? 'pointer' : undefined,
     border: m_state === 'enter' ? '1px skyblue solid' : undefined
   }
@@ -115,14 +124,19 @@ function MakeArea() {
       onMouseLeave={() => { m_state !== 'click' ? SetMouse('leave') : console.log('1') }}
       onMouseDown={() => SetMouse('click')}>
       {m_state !== 'click' ?
-        <PlusCircleOutlined style={{ fontSize: '2rem', color: m_state === 'enter' ? 'skyblue' : undefined }} /> :
-        <ItemDroppable id="Content" type="COMPONENT" />
+        <PlusCircleOutlined style={{ fontSize: '2rem', color: m_state === 'enter' ? 'skyblue' : undefined,paddingTop:'30px',paddingBottom:'30px'}} /> :
+        (
+          <div>
+            <ItemDroppable id='Content' type="COMPONENT" />
+            <MakeArea key={key+1}/>
+          </div>
+        )
       }
 
     </div>
   )
 }
-export function Layout_1({ item = false, style = {} }: IItem) {
+export function Layout_1({ item = false, style = {background:'white'} }: IItem) {
   const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content);
 
   var item_header_style: CSS.Properties = {};
@@ -141,16 +155,14 @@ export function Layout_1({ item = false, style = {} }: IItem) {
   return (
     <Layout style={style} >
       <Header style={item_header_style}>
-        {!item && <ItemDroppable id="Header" type="COMPONENT" />}
+        {/* {!item && <ItemDroppable id="Header" type="COMPONENT" />} */}
       </Header>
 
-      <Row>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-          {!item && <MakeArea />}
-
+     
+        <div>
+          {!item && <MakeArea key={0}/>}
         </div>
 
-      </Row>
     </Layout>
   )
 }
