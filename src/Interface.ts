@@ -1,4 +1,5 @@
 import CSS from 'csstype';
+import { ReactElement } from 'react';
 
 export interface IDragging {
     state: boolean;
@@ -6,11 +7,7 @@ export interface IDragging {
 }
 
 export interface IMainState {
-    Layout: React.ReactElement | null;
-    Header: React.ReactElement[];
-    Content: React.ReactElement[];
-    Sidebar: React.ReactElement[];
-    Footer: React.ReactElement[];
+    [key:string]: React.ReactElement[] | ReactElement | null;
 }
 export interface IMenuState{
     MAINVIEW: {
@@ -27,6 +24,6 @@ export interface IItem {
 }
 
 export interface IDroppable<T,Q> {
-    id: keyof T;
+    id: string;
     type: keyof Q;
 }

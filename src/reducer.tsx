@@ -5,16 +5,12 @@ import { IMainState } from './Interface';
 // State Init
 const InitState: IMainState = {
     Layout: null,
-    Header: [],
-    Content: [],
-    Sidebar: [],
-    Footer: [],
 }
 
 // immer-Reducer
 class MainReducer extends ImmerReducer<IMainState>{
     addComponent(target: string, item: JSX.Element | null): void { // ${item} in ${target}
-        let draft = this.draftState[target as keyof IMainState];
+        let draft = this.draftState[target];
 
         if (Array.isArray(draft)) // IMainState >> React.ReactElement or React.ReactElement[] Check
         {
@@ -22,7 +18,9 @@ class MainReducer extends ImmerReducer<IMainState>{
             draft_array.push(item);
         }
         else
-            this.draftState[target as keyof IMainState] = item as any;
+        {
+            this.draftState[target] = item;
+        }
     }
 }
 

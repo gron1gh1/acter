@@ -40,7 +40,7 @@ function App() {
 
 
     const dispatch = useDispatch();
-    const MainLayout: (React.ReactElement | null) = useSelector((state: IMainState) => state.Layout); // Get Data from Reducer to this 
+    const MainLayout : React.ReactElement = useSelector((state: IMainState) => state['Layout']) as React.ReactElement; // Get Data from Reducer to this 
 
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;

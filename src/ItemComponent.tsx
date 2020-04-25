@@ -84,19 +84,20 @@ export function ButtonItem(style: CSS.Properties) {
 
 function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   const MainState: IMainState = useSelector((state: IMainState) => state);
-  const key = MainState[id] as React.ReactElement[];
+  const key = MainState[id] as React.ReactElement
 
   return (
     <Droppable droppableId={id} type={type}>
       {(provided, snapshot) => (
         <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
-          {key && key.map((v, i) =>
+          {/* {key && key.map((v, i) =>
             (
               <div>
                 {React.cloneElement(v)}
               </div>
             )
-          )}
+          )} */}
+          {key && React.cloneElement(key)}
           {provided.placeholder}
         </div>
       )}
@@ -106,10 +107,10 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
 
 interface IArea
 {
-  key: number;
+  unique_n: number;
 }
 
-function MakeArea({key} : IArea) {
+function MakeArea({unique_n} : IArea) {
   const [m_state, SetMouse] = useState('leave');
   const setStyle: React.CSSProperties = {
     background:'GhostWhite',
@@ -120,15 +121,15 @@ function MakeArea({key} : IArea) {
   }
   return (
     <div style={setStyle}
-      onMouseEnter={() => { m_state !== 'click' ? SetMouse('enter') : console.log('1') }}
-      onMouseLeave={() => { m_state !== 'click' ? SetMouse('leave') : console.log('1') }}
+      onMouseEnter={() => { m_state !== 'click' && SetMouse('enter')}}
+      onMouseLeave={() => { m_state !== 'click' && SetMouse('leave')}}
       onMouseDown={() => SetMouse('click')}>
       {m_state !== 'click' ?
         <PlusCircleOutlined style={{ fontSize: '2rem', color: m_state === 'enter' ? 'skyblue' : undefined,paddingTop:'30px',paddingBottom:'30px'}} /> :
         (
           <div>
-            <ItemDroppable id='Content' type="COMPONENT" />
-            <MakeArea key={key+1}/>
+            <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
+            <MakeArea unique_n={unique_n+1}/>
           </div>
         )
       }
@@ -137,7 +138,7 @@ function MakeArea({key} : IArea) {
   )
 }
 export function Layout_1({ item = false, style = {background:'white'} }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content);
+  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: CSS.Properties = {};
   var item_content_style: CSS.Properties = {};
@@ -160,14 +161,14 @@ export function Layout_1({ item = false, style = {background:'white'} }: IItem) 
 
      
         <div>
-          {!item && <MakeArea key={0}/>}
+          {!item && <MakeArea unique_n={0}/>}
         </div>
 
     </Layout>
   )
 }
 export function Layout_2({ item = false, style = {} }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content);
+  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: CSS.Properties = {};
   var item_content_style: CSS.Properties = {};
@@ -209,7 +210,7 @@ export function Layout_2({ item = false, style = {} }: IItem) {
   )
 }
 export function Layout_3({ item = false, style = {} }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content);
+  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: CSS.Properties = {};
   var item_content_style: CSS.Properties = {};
@@ -252,7 +253,7 @@ export function Layout_3({ item = false, style = {} }: IItem) {
 
 //export function Layout_4({ item, style,sidebar } : Item) {
 export function Layout_4({ item = false, style = {} }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content);
+  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: CSS.Properties = {};
   var item_content_style: CSS.Properties = {};
