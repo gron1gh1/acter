@@ -1,6 +1,7 @@
 
-import React from 'react';
-import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
+import React, { useState } from 'react';
+import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
+import { PlusCircleOutlined } from '@ant-design/icons';
 import CSS from 'csstype';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 import { IDroppable, IItem, IMainState, IMenuState } from './Interface';
@@ -66,6 +67,7 @@ export function LoginItem(style: CSS.Properties) {
 }
 const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   background: isDraggingOver ? "lightblue" : "white",
+  width: '100vh',
 });
 
 export function ButtonItem(style: CSS.Properties) {
@@ -98,6 +100,28 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
     </Droppable>
   )
 }
+
+function MakeArea() {
+  const [m_state, SetMouse] = useState('leave');
+  const setStyle: React.CSSProperties = {
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    height: '100px', width: '100vh',
+    cursor: m_state !== 'click' ? 'pointer' : undefined,
+    border: m_state === 'enter' ? '1px skyblue solid' : undefined
+  }
+  return (
+    <div style={setStyle}
+      onMouseEnter={() => { m_state !== 'click' ? SetMouse('enter') : console.log('1') }}
+      onMouseLeave={() => { m_state !== 'click' ? SetMouse('leave') : console.log('1') }}
+      onMouseDown={() => SetMouse('click')}>
+      {m_state !== 'click' ?
+        <PlusCircleOutlined style={{ fontSize: '2rem', color: m_state === 'enter' ? 'skyblue' : undefined }} /> :
+        <ItemDroppable id="Content" type="COMPONENT" />
+      }
+
+    </div>
+  )
+}
 export function Layout_1({ item = false, style = {} }: IItem) {
   const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content);
 
@@ -119,14 +143,14 @@ export function Layout_1({ item = false, style = {} }: IItem) {
       <Header style={item_header_style}>
         {!item && <ItemDroppable id="Header" type="COMPONENT" />}
       </Header>
-      <Layout.Content style={item_content_style}>
-        {!item && <ItemDroppable id="Content" type="COMPONENT" />}
 
+      <Row>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          {!item && <MakeArea />}
 
-      </Layout.Content>
-      <Footer style={item_header_style}>
-        {!item && <ItemDroppable id="Footer" type="COMPONENT" />}
-      </Footer>
+        </div>
+
+      </Row>
     </Layout>
   )
 }

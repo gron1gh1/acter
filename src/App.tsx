@@ -10,38 +10,28 @@ import { Scrollbars } from 'react-custom-scrollbars';
 
 const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     background: isDraggingOver ? "lightblue" : "white",
-    height: '768px',
+    width: '1024px',
+    minHeight: '170px',
     display: 'flex',
     flexDirection: 'column',
 });
-interface IMainView{
+interface IMainView {
     MainLayout: React.ReactElement | null;
 }
-function MainView({MainLayout}: IMainView) {
+function MainView({ MainLayout }: IMainView) {
     return (
-        <div>
-            <div style={{ marginLeft: '-870px' }}>
+        <Droppable droppableId="Layout" type="MAINVIEW">
+            {(provided, snapshot) => (
+                <div
+                    ref={provided.innerRef}
+                    style={getMainViewStyle(snapshot.isDraggingOver)}>
 
-                <Radio.Group defaultValue="PREVIEW" buttonStyle="solid">
-                    <Radio.Button value="PREVIEW">PREVIEW</Radio.Button>
-                    <Radio.Button value="CODE">CODE</Radio.Button>
-                </Radio.Group>
-            </div>
-            <div style={{ width: '1024px', flexBasis: '768px', background: 'white', overflowY: 'visible' }}>
-                <Droppable droppableId="Layout" type="MAINVIEW">
-                    {(provided, snapshot) => (
-                        <div
-                            ref={provided.innerRef}
-                            style={getMainViewStyle(snapshot.isDraggingOver)}>
+                    {MainLayout && React.cloneElement(MainLayout, { item: false })}
+                    {provided.placeholder}
+                </div>
 
-                            {MainLayout && React.cloneElement(MainLayout, { item: false })}
-                            {provided.placeholder}
-                        </div>
-
-                    )}
-                </Droppable>
-            </div>
-        </div>
+            )}
+        </Droppable>
     )
 }
 
@@ -70,7 +60,7 @@ function App() {
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
             <Fragment>
                 <Row style={{ height: '100vh' }}>
-                    <Col flex="264px" style={{ background: 'white', overflowY: 'hidden', height: '100vh' }}>
+                    <Col flex="264px" style={{ background: 'white', height: '100vh' }}>
                         <Sidebar />
                     </Col>
                     <Col flex="auto" style={{
@@ -78,8 +68,14 @@ function App() {
                         display: 'flex', flexDirection: 'column',
                         alignItems: 'center', justifyContent: 'center',
                     }}>
+                        <div style={{ marginLeft: '-870px' }}>
 
-                        <MainView MainLayout={MainLayout}/>
+                            <Radio.Group defaultValue="PREVIEW" buttonStyle="solid">
+                                <Radio.Button value="PREVIEW">PREVIEW</Radio.Button>
+                                <Radio.Button value="CODE">CODE</Radio.Button>
+                            </Radio.Group>
+                        </div>
+                        <MainView MainLayout={MainLayout} />
                     </Col>
                 </Row>
             </Fragment>
