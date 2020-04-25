@@ -2,7 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { Row, Col, Radio } from 'antd';
 import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux';
-import { IDragging, IMainState, IMenuState } from './Interface';
+import { IDragging, IMainState, IMenuState,IMainView } from './Interface';
 import { ActionCreators } from './reducer';
 import Sidebar from './Sidebar';
 import { ItemList } from './StaticData';
@@ -15,9 +15,7 @@ const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     display: 'flex',
     flexDirection: 'column',
 });
-interface IMainView {
-    MainLayout: React.ReactElement | null;
-}
+
 function MainView({ MainLayout }: IMainView) {
     return (
         <Droppable droppableId="Layout" type="MAINVIEW">

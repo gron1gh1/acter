@@ -27,3 +27,11 @@ export interface IDroppable<T,Q> {
     id: string;
     type: keyof Q;
 }
+
+export interface IMakeArea{
+  unique_n: number;
+}
+
+export interface IMainView {
+    MainLayout: React.ReactElement | null;
+}

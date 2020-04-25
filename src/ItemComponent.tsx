@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
-import { PlusCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import CSS from 'csstype';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState } from './Interface';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeArea } from './Interface';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { stringify } from 'querystring';
-import { format } from 'path';
+
+import { ActionCreators } from './reducer';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -70,7 +70,7 @@ export function LoginItem(style: CSS.Properties) {
 const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   background: isDraggingOver ? "lightblue" : "white",
   width: '100%',
-  minHeight:'85px'
+  minHeight: '85px'
 });
 
 export function ButtonItem(style: CSS.Properties) {
@@ -85,51 +85,67 @@ export function ButtonItem(style: CSS.Properties) {
 function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   const MainState: IMainState = useSelector((state: IMainState) => state);
   const key = MainState[id] as React.ReactElement
+  const dispatch = useDispatch();
+  const [m_state, SetMouse] = useState('leave');
+  const setStyle: React.CSSProperties = {
+    background: 'GhostWhite',
+    textAlign: 'center',
+    width: '100%',
+    cursor: m_state !== 'click' ? 'pointer' : undefined,
+    border: m_state === 'enter' ? '1px skyblue solid' : undefined
+  }
+
+  function Remove() {
+     dispatch(ActionCreators.addComponent(id, null));
+  }
 
   return (
-    <Droppable droppableId={id} type={type}>
-      {(provided, snapshot) => (
-        <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
-          {/* {key && key.map((v, i) =>
-            (
-              <div>
-                {React.cloneElement(v)}
+    <div>
+      {key ?
+        (
+          <div style={setStyle}
+            onMouseEnter={() => { SetMouse('enter') }}
+            onMouseLeave={() => { SetMouse('leave') }}
+          >
+            {m_state === 'enter' && <CloseCircleOutlined style={{fontSize:'2rem',paddingTop:'15px',paddingBottom:'15px'}} onClick={Remove} />}
+            {React.cloneElement(key)}
+          </div>
+        ) :
+        (
+          <Droppable droppableId={id} type={type}>
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
+                {provided.placeholder}
               </div>
-            )
-          )} */}
-          {key && React.cloneElement(key)}
-          {provided.placeholder}
-        </div>
-      )}
-    </Droppable>
+            )}
+          </Droppable>
+        )}
+
+    </div>
   )
 }
 
-interface IArea
-{
-  unique_n: number;
-}
 
-function MakeArea({unique_n} : IArea) {
+function MakeArea({ unique_n }: IMakeArea) {
   const [m_state, SetMouse] = useState('leave');
   const setStyle: React.CSSProperties = {
-    background:'GhostWhite',
-    textAlign:'center',
+    background: 'GhostWhite',
+    textAlign: 'center',
     width: '100%',
     cursor: m_state !== 'click' ? 'pointer' : undefined,
     border: m_state === 'enter' ? '1px skyblue solid' : undefined
   }
   return (
     <div style={setStyle}
-      onMouseEnter={() => { m_state !== 'click' && SetMouse('enter')}}
-      onMouseLeave={() => { m_state !== 'click' && SetMouse('leave')}}
+      onMouseEnter={() => { m_state !== 'click' && SetMouse('enter') }}
+      onMouseLeave={() => { m_state !== 'click' && SetMouse('leave') }}
       onMouseDown={() => SetMouse('click')}>
       {m_state !== 'click' ?
-        <PlusCircleOutlined style={{ fontSize: '2rem', color: m_state === 'enter' ? 'skyblue' : undefined,paddingTop:'30px',paddingBottom:'30px'}} /> :
+        <PlusCircleOutlined style={{ fontSize: '2rem', color: m_state === 'enter' ? 'skyblue' : undefined, paddingTop: '30px', paddingBottom: '30px' }} /> :
         (
           <div>
             <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
-            <MakeArea unique_n={unique_n+1}/>
+            <MakeArea unique_n={unique_n + 1} />
           </div>
         )
       }
@@ -137,7 +153,7 @@ function MakeArea({unique_n} : IArea) {
     </div>
   )
 }
-export function Layout_1({ item = false, style = {background:'white'} }: IItem) {
+export function Layout_1({ item = false, style = { background: 'white' } }: IItem) {
   const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: CSS.Properties = {};
@@ -159,10 +175,10 @@ export function Layout_1({ item = false, style = {background:'white'} }: IItem) 
         {/* {!item && <ItemDroppable id="Header" type="COMPONENT" />} */}
       </Header>
 
-     
-        <div>
-          {!item && <MakeArea unique_n={0}/>}
-        </div>
+
+      <div>
+        {!item && <MakeArea unique_n={0} />}
+      </div>
 
     </Layout>
   )
