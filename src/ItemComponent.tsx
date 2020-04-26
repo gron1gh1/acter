@@ -85,12 +85,13 @@ const RemoveButton = styled(CloseCircleOutlined)`
     display: none;
     margin-top:15px;
     margin-bottom:15px;
-  
     font-size:2rem;
     color:LightSteelBlue;
     &:hover{
-      color:RoyalBlue;
+      color:Crimson;
+      
     }
+    
 `;
 interface IMakeBox {
   isClick: boolean;
@@ -103,22 +104,29 @@ const MakeButton = styled(PlusCircleOutlined)`
     color:black;
     
 `;
+//https://codesandbox.io/s/8qL5zyZKr
 const MakeBox = styled.div<IMakeBox>`
     background: GhostWhite;
     text-align: center;
     width: 100%;
+    
+    box-shadow: none;
+    ${RemoveButton}:hover ~ & {
+
+      box-shadow: 0 0 0 50px Crimson inset;
+    }
     ${(props) =>
     props.isClick === false &&
     css`
       &:hover{
-        cursor:pointer;
-        border: 1px RoyalBlue solid;
+
         ${MakeButton}{
           color:RoyalBlue;
         }
         ${RemoveButton}{
-          display:block;
+          display:inline-block;
         }
+        
       }
     `}
 `;
@@ -136,8 +144,8 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
     <div>
       {key ?
         (
-          <MakeBox isClick={false}>
-            <RemoveButton onClick={Remove} />
+          <MakeBox isClick={false} className="TEST" >
+            <RemoveButton onClick={Remove}/>
             {React.cloneElement(key)}
           </MakeBox>
         ) :
@@ -157,13 +165,13 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
 
 
 function MakeArea({ unique_n }: IMakeArea) {
-  const [m_state, SetMouse] = useState('leave');
+  const [m_state, SetMouse] = useState(false);
 
   return (
-    <MakeBox isClick={m_state === 'click' ? true : false}
-      onMouseDown={() => SetMouse('click')}>
-      {m_state !== 'click' ?
-        <MakeButton />
+    <MakeBox isClick={m_state}
+      onMouseDown={() => SetMouse(true)}>
+      {m_state === false ?
+        <MakeButton/>
         : (
           <div>
             <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
