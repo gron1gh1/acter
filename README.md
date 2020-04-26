@@ -1,2 +1,2 @@
-﻿# ACTer
+﻿# acter-react
 <br>React Prototyping Tool
