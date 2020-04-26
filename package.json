@@ -15,8 +15,8 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
     "@types/redux-actions": "^2.6.1",
+    "@types/styled-components": "^5.1.0",
     "antd": "^4.1.1",
-    "csstype": "^2.6.10",
     "immer": "^6.0.3",
     "immer-reducer": "^0.7.10",
     "react": "^16.13.1",
@@ -27,6 +27,7 @@
     "react-scripts": "3.4.1",
     "redux": "^4.0.5",
     "redux-actions": "^2.6.5",
+    "styled-components": "^5.1.0",
     "typescript": "~3.7.2"
   },
   "scripts": {

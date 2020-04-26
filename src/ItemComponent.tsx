@@ -2,18 +2,17 @@
 import React, { useState } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
-import CSS from 'csstype';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
 import { IDroppable, IItem, IMainState, IMenuState, IMakeArea } from './Interface';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-
+import styled, { css } from 'styled-components';
 import { ActionCreators } from './reducer';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-export function MenuItem(style: CSS.Properties) {
+export function MenuItem(style: React.CSSProperties) {
   return (
     <Menu style={style}>
       <Menu.Item>Menu</Menu.Item>
@@ -24,7 +23,7 @@ export function MenuItem(style: CSS.Properties) {
   )
 }
 
-export function LoginItem(style: CSS.Properties) {
+export function LoginItem(style: React.CSSProperties) {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -67,13 +66,14 @@ export function LoginItem(style: CSS.Properties) {
     </Form>
   )
 }
+
 const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   background: isDraggingOver ? "lightblue" : "white",
   width: '100%',
   minHeight: '85px'
 });
 
-export function ButtonItem(style: CSS.Properties) {
+export function ButtonItem(style: React.CSSProperties) {
   return (
     <Layout style={style}>
       <Button type="primary">Primary</Button>
@@ -81,6 +81,15 @@ export function ButtonItem(style: CSS.Properties) {
   )
 }
 
+const RemoveButton = styled(CloseCircleOutlined)`
+    font-size:2rem;
+    padding-top:15px;
+    padding-bottom:15px;
+    color:black;
+    &:hover{
+      color:skyblue;
+    }
+`;
 
 function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   const MainState: IMainState = useSelector((state: IMainState) => state);
@@ -96,7 +105,7 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   }
 
   function Remove() {
-     dispatch(ActionCreators.addComponent(id, null));
+    dispatch(ActionCreators.addComponent(id, null));
   }
 
   return (
@@ -107,7 +116,7 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
             onMouseEnter={() => { SetMouse('enter') }}
             onMouseLeave={() => { SetMouse('leave') }}
           >
-            {m_state === 'enter' && <CloseCircleOutlined style={{fontSize:'2rem',paddingTop:'15px',paddingBottom:'15px'}} onClick={Remove} />}
+            {m_state === 'enter' && <RemoveButton onClick={Remove} />}
             {React.cloneElement(key)}
           </div>
         ) :
@@ -124,6 +133,34 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
     </div>
   )
 }
+interface IMakeBox {
+  isClick: boolean;
+}
+
+const MakeButton = styled(PlusCircleOutlined)`
+    font-size:2rem;
+    padding-top:30px;
+    padding-bottom:30px;
+    color:black;
+
+`;
+const MakeBox = styled.div<IMakeBox>`
+    background: GhostWhite;
+    text-align: center;
+    width: 100%;
+    
+    ${(props) =>
+    props.isClick === false &&
+    css`
+      &:hover{
+        cursor:pointer;
+        border: 1px skyblue solid;
+        ${MakeButton}{
+          color:skyblue;
+        }
+      }
+    `}
+`;
 
 
 function MakeArea({ unique_n }: IMakeArea) {
@@ -136,13 +173,11 @@ function MakeArea({ unique_n }: IMakeArea) {
     border: m_state === 'enter' ? '1px skyblue solid' : undefined
   }
   return (
-    <div style={setStyle}
-      onMouseEnter={() => { m_state !== 'click' && SetMouse('enter') }}
-      onMouseLeave={() => { m_state !== 'click' && SetMouse('leave') }}
+    <MakeBox isClick={m_state === 'click' ? true : false}
       onMouseDown={() => SetMouse('click')}>
       {m_state !== 'click' ?
-        <PlusCircleOutlined style={{ fontSize: '2rem', color: m_state === 'enter' ? 'skyblue' : undefined, paddingTop: '30px', paddingBottom: '30px' }} /> :
-        (
+        <MakeButton />
+        : (
           <div>
             <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
             <MakeArea unique_n={unique_n + 1} />
@@ -150,14 +185,14 @@ function MakeArea({ unique_n }: IMakeArea) {
         )
       }
 
-    </div>
+    </MakeBox>
   )
 }
 export function Layout_1({ item = false, style = { background: 'white' } }: IItem) {
   const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
-  var item_header_style: CSS.Properties = {};
-  var item_content_style: CSS.Properties = {};
+  var item_header_style: React.CSSProperties = {};
+  var item_content_style: React.CSSProperties = {};
   if (item === true) {
     item_header_style = {
       background: `${Header_Color}`, height: '40px'
@@ -186,9 +221,9 @@ export function Layout_1({ item = false, style = { background: 'white' } }: IIte
 export function Layout_2({ item = false, style = {} }: IItem) {
   const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
-  var item_header_style: CSS.Properties = {};
-  var item_content_style: CSS.Properties = {};
-  var sidebar_content_style: CSS.Properties = {};
+  var item_header_style: React.CSSProperties = {};
+  var item_content_style: React.CSSProperties = {};
+  var sidebar_content_style: React.CSSProperties = {};
   if (item === true) {
     item_header_style = {
       background: `${Header_Color}`, height: '40px'
@@ -228,9 +263,9 @@ export function Layout_2({ item = false, style = {} }: IItem) {
 export function Layout_3({ item = false, style = {} }: IItem) {
   const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
-  var item_header_style: CSS.Properties = {};
-  var item_content_style: CSS.Properties = {};
-  var sidebar_content_style: CSS.Properties = {};
+  var item_header_style: React.CSSProperties = {};
+  var item_content_style: React.CSSProperties = {};
+  var sidebar_content_style: React.CSSProperties = {};
   if (item === true) {
     item_header_style = {
       background: `${Header_Color}`, height: '40px'
@@ -271,9 +306,9 @@ export function Layout_3({ item = false, style = {} }: IItem) {
 export function Layout_4({ item = false, style = {} }: IItem) {
   const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
-  var item_header_style: CSS.Properties = {};
-  var item_content_style: CSS.Properties = {};
-  var sidebar_content_style: CSS.Properties = {};
+  var item_header_style: React.CSSProperties = {};
+  var item_content_style: React.CSSProperties = {};
+  var sidebar_content_style: React.CSSProperties = {};
   if (item === true) {
     item_header_style = {
       background: `${Header_Color}`, height: '40px'
