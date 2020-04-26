@@ -82,27 +82,51 @@ export function ButtonItem(style: React.CSSProperties) {
 }
 
 const RemoveButton = styled(CloseCircleOutlined)`
+    display: none;
+    margin-top:15px;
+    margin-bottom:15px;
+  
     font-size:2rem;
-    padding-top:15px;
-    padding-bottom:15px;
-    color:black;
+    color:LightSteelBlue;
     &:hover{
-      color:skyblue;
+      color:RoyalBlue;
     }
+`;
+interface IMakeBox {
+  isClick: boolean;
+}
+
+const MakeButton = styled(PlusCircleOutlined)`
+    font-size:2rem;
+    padding-top:30px;
+    padding-bottom:30px;
+    color:black;
+    
+`;
+const MakeBox = styled.div<IMakeBox>`
+    background: GhostWhite;
+    text-align: center;
+    width: 100%;
+    ${(props) =>
+    props.isClick === false &&
+    css`
+      &:hover{
+        cursor:pointer;
+        border: 1px RoyalBlue solid;
+        ${MakeButton}{
+          color:RoyalBlue;
+        }
+        ${RemoveButton}{
+          display:block;
+        }
+      }
+    `}
 `;
 
 function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   const MainState: IMainState = useSelector((state: IMainState) => state);
   const key = MainState[id] as React.ReactElement
   const dispatch = useDispatch();
-  const [m_state, SetMouse] = useState('leave');
-  const setStyle: React.CSSProperties = {
-    background: 'GhostWhite',
-    textAlign: 'center',
-    width: '100%',
-    cursor: m_state !== 'click' ? 'pointer' : undefined,
-    border: m_state === 'enter' ? '1px skyblue solid' : undefined
-  }
 
   function Remove() {
     dispatch(ActionCreators.addComponent(id, null));
@@ -112,13 +136,10 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
     <div>
       {key ?
         (
-          <div style={setStyle}
-            onMouseEnter={() => { SetMouse('enter') }}
-            onMouseLeave={() => { SetMouse('leave') }}
-          >
-            {m_state === 'enter' && <RemoveButton onClick={Remove} />}
+          <MakeBox isClick={false}>
+            <RemoveButton onClick={Remove} />
             {React.cloneElement(key)}
-          </div>
+          </MakeBox>
         ) :
         (
           <Droppable droppableId={id} type={type}>
@@ -133,45 +154,11 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
     </div>
   )
 }
-interface IMakeBox {
-  isClick: boolean;
-}
-
-const MakeButton = styled(PlusCircleOutlined)`
-    font-size:2rem;
-    padding-top:30px;
-    padding-bottom:30px;
-    color:black;
-
-`;
-const MakeBox = styled.div<IMakeBox>`
-    background: GhostWhite;
-    text-align: center;
-    width: 100%;
-    
-    ${(props) =>
-    props.isClick === false &&
-    css`
-      &:hover{
-        cursor:pointer;
-        border: 1px skyblue solid;
-        ${MakeButton}{
-          color:skyblue;
-        }
-      }
-    `}
-`;
 
 
 function MakeArea({ unique_n }: IMakeArea) {
   const [m_state, SetMouse] = useState('leave');
-  const setStyle: React.CSSProperties = {
-    background: 'GhostWhite',
-    textAlign: 'center',
-    width: '100%',
-    cursor: m_state !== 'click' ? 'pointer' : undefined,
-    border: m_state === 'enter' ? '1px skyblue solid' : undefined
-  }
+
   return (
     <MakeBox isClick={m_state === 'click' ? true : false}
       onMouseDown={() => SetMouse('click')}>
