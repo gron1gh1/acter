@@ -9,7 +9,7 @@ const InitState: IMainState = {
 
 // immer-Reducer
 class MainReducer extends ImmerReducer<IMainState>{
-    addComponent(target: string, item: JSX.Element | null): void { // ${item} in ${target}
+    addComponent(target: string, item: JSX.Element | null) { // ${item} in ${target}
         let draft = this.draftState[target];
 
         if (Array.isArray(draft)) // IMainState >> React.ReactElement or React.ReactElement[] Check
@@ -21,6 +21,11 @@ class MainReducer extends ImmerReducer<IMainState>{
         {
             this.draftState[target] = item;
         }
+    }
+
+    removeComponent(target: string)
+    {
+        delete this.draftState[target];
     }
 }
 

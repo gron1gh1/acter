@@ -129,9 +129,9 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   const dispatch = useDispatch();
   const [boxColor, SetBoxColor] = useState('RoyalBlue');
   function Remove() {
-    dispatch(ActionCreators.addComponent(id, null));
+//    dispatch(ActionCreators.addComponent(id, null));
+    dispatch(ActionCreators.removeComponent(id));
   }
-
   return (
     <div>
       {key ?
@@ -161,9 +161,28 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
 function MakeArea({ unique_n }: IMakeArea) {
   const [m_state, SetMouse] = useState(false);
 
+  const MainState: IMainState = useSelector((state: IMainState) => state);
+  const key = MainState[`Content-${unique_n}`] as React.ReactElement;
+  const dispatch = useDispatch();
+
   return (
+
     <MakeBox boxColor="RoyalBlue" isClick={m_state}
-      onMouseDown={() => SetMouse(true)}>
+      onMouseDown={() => {
+        SetMouse(true);
+        dispatch(ActionCreators.addComponent(`Content-${unique_n}`, null));
+      }}>
+        {key === undefined && <MakeButton /> /* Reducer MainState Object is No Init */}
+
+        {key === null && (
+          <div>
+            <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
+            <MakeArea unique_n={unique_n + 1} />
+          </div>
+        ) /* Reducer MainState Object is Init */}
+
+        
+{/*         
       {m_state === false ?
         <MakeButton />
         : (
@@ -172,7 +191,7 @@ function MakeArea({ unique_n }: IMakeArea) {
             <MakeArea unique_n={unique_n + 1} />
           </div>
         )
-      }
+      } */}
 
     </MakeBox>
   )
