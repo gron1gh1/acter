@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeArea } from './Interface';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeArea,IMakeBox } from './Interface';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { ActionCreators } from './reducer';
@@ -81,7 +81,7 @@ export function ButtonItem(style: React.CSSProperties) {
   )
 }
 
-const RemoveButton = styled(CloseCircleOutlined)`
+const RemoveButton = styled.div`
     display: none;
     margin-top:15px;
     margin-bottom:15px;
@@ -89,13 +89,10 @@ const RemoveButton = styled(CloseCircleOutlined)`
     color:LightSteelBlue;
     &:hover{
       color:Crimson;
-      
     }
     
 `;
-interface IMakeBox {
-  isClick: boolean;
-}
+
 
 const MakeButton = styled(PlusCircleOutlined)`
     font-size:2rem;
@@ -104,22 +101,17 @@ const MakeButton = styled(PlusCircleOutlined)`
     color:black;
     
 `;
-//https://codesandbox.io/s/8qL5zyZKr
+
 const MakeBox = styled.div<IMakeBox>`
     background: GhostWhite;
     text-align: center;
     width: 100%;
-    
-    box-shadow: none;
-    ${RemoveButton}:hover ~ & {
-
-      box-shadow: 0 0 0 50px Crimson inset;
-    }
     ${(props) =>
     props.isClick === false &&
     css`
+      cursor:pointer;
       &:hover{
-
+        box-shadow: 0 0 0 1px ${props.boxColor} inset;
         ${MakeButton}{
           color:RoyalBlue;
         }
@@ -133,9 +125,9 @@ const MakeBox = styled.div<IMakeBox>`
 
 function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
   const MainState: IMainState = useSelector((state: IMainState) => state);
-  const key = MainState[id] as React.ReactElement
+  const key = MainState[id] as React.ReactElement;
   const dispatch = useDispatch();
-
+  const [boxColor, SetBoxColor] = useState('RoyalBlue');
   function Remove() {
     dispatch(ActionCreators.addComponent(id, null));
   }
@@ -144,8 +136,10 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
     <div>
       {key ?
         (
-          <MakeBox isClick={false} className="TEST" >
-            <RemoveButton onClick={Remove}/>
+          <MakeBox boxColor={boxColor} isClick={false}>
+            <RemoveButton onClick={Remove} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
+              <CloseCircleOutlined />
+            </RemoveButton>
             {React.cloneElement(key)}
           </MakeBox>
         ) :
@@ -168,10 +162,10 @@ function MakeArea({ unique_n }: IMakeArea) {
   const [m_state, SetMouse] = useState(false);
 
   return (
-    <MakeBox isClick={m_state}
+    <MakeBox boxColor="RoyalBlue" isClick={m_state}
       onMouseDown={() => SetMouse(true)}>
       {m_state === false ?
-        <MakeButton/>
+        <MakeButton />
         : (
           <div>
             <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />

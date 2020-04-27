@@ -35,3 +35,8 @@ export interface IMakeArea{
 export interface IMainView {
     MainLayout: React.ReactElement | null;
 }
+
+export interface IMakeBox {
+    boxColor: string;
+    isClick: boolean;
+  }
