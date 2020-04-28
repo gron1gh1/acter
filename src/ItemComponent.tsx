@@ -123,19 +123,17 @@ const MakeBox = styled.div<IMakeBox>`
     `}
 `;
 
-function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
-  const MainArea: React.ReactElement[] = useSelector((state: IMainState) => state['Area'] as React.ReactElement[]);
-  const key = MainArea.length;
-  console.log(MainArea.length);
+function ItemDroppable({ id,key, type }: IDroppable<IMainState, IMenuState>) {
+
   return (
     <div>
-          <Droppable droppableId={`Area-${key}`} type={type}>
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+      <Droppable droppableId={`Area-${key}`} type={type}>
+        {(provided, snapshot) => (
+          <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </div>
   )
 }
@@ -143,27 +141,15 @@ function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
 
 function MakeArea() {
 
-  //const MainState: IMainState = useSelector((state: IMainState) => state);
-  // const key = MainState[`Content-${unique_n}`] as React.ReactElement;
   const dispatch = useDispatch();
   const MainArea: React.ReactElement[] = useSelector((state: IMainState) => state['Area'] as React.ReactElement[]);
   function Make() {
     dispatch(ActionCreators.makeArea());
-    console.log(MainArea);
   }
   return (
 
     <MakeBox boxColor="RoyalBlue" isClick={false}
       onClick={Make}>
-      {/* {key === undefined && <MakeButton /> /* Reducer MainState Object is No Init */}
-      {/* key === null && (
-          <div>
-            <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
-            <MakeArea unique_n={unique_n + 1} />
-          </div>
-        )  Reducer MainState Object is Init */}
-
-
       <MakeButton />
     </MakeBox>
   )
@@ -194,7 +180,7 @@ function Area() {
         }
         else if (v === null) {
           return (
-            <ItemDroppable id="Area" type="COMPONENT" />
+            <ItemDroppable id="Area" key={idx} type="COMPONENT" />
           )
         }
       })}
@@ -257,18 +243,18 @@ export function Layout_2({ item = false, style = {} }: IItem) {
 
       {/* <Header style={item_header_style} height={50}>Header</Header> */}
       <Header style={item_header_style}>
-        {!item && <ItemDroppable id="Header" type="COMPONENT" />}
+        {/* {!item && <ItemDroppable id="Header" type="COMPONENT" />} */}
       </Header>
       <Layout>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-          {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />}
+          {/* {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />} */}
         </Sider>
         <Layout.Content style={item_content_style}>
-          {!item && <ItemDroppable id="Content" type="COMPONENT" />}
+          {/* {!item && <ItemDroppable id="Content" type="COMPONENT" />} */}
         </Layout.Content>
       </Layout>
       <Footer style={item_header_style}>
-        {!item && <ItemDroppable id="Footer" type="COMPONENT" />}
+        {/* {!item && <ItemDroppable id="Footer" type="COMPONENT" />} */}
       </Footer>
     </Layout>
 
@@ -297,18 +283,18 @@ export function Layout_3({ item = false, style = {} }: IItem) {
 
     <Layout style={style}>
       <Header style={item_header_style}>
-        {!item && <ItemDroppable id="Header" type="COMPONENT" />}
+        {/* {!item && <ItemDroppable id="Header" type="COMPONENT" />} */}
       </Header>
       <Layout>
         <Layout.Content style={item_content_style}>
-          {!item && <ItemDroppable id="Content" type="COMPONENT" />}
+          {/* {!item && <ItemDroppable id="Content" type="COMPONENT" />} */}
         </Layout.Content>
         <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-          {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />}
+          {/* {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />} */}
         </Sider>
       </Layout>
       <Footer style={item_header_style}>
-        {!item && <ItemDroppable id="Footer" type="COMPONENT" />}
+        {/* {!item && <ItemDroppable id="Footer" type="COMPONENT" />} */}
       </Footer>
     </Layout>
 
@@ -341,18 +327,18 @@ export function Layout_4({ item = false, style = {} }: IItem) {
     <Layout style={style}>
 
       <Sider style={sidebar_content_style} width={sidebar_content_style && sidebar_content_style.width}>
-        {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />}
+        {/* {!item && <ItemDroppable id="Sidebar" type="COMPONENT" />} */}
       </Sider>
 
       <Layout>
         <Header style={item_header_style}>
-          {!item && <ItemDroppable id="Header" type="COMPONENT" />}
+          {/* {!item && <ItemDroppable id="Header" type="COMPONENT" />} */}
         </Header>
         <Layout.Content style={item_content_style}>
-          {!item && <ItemDroppable id="Content" type="COMPONENT" />}
+          {/* {!item && <ItemDroppable id="Content" type="COMPONENT" />} */}
         </Layout.Content>
         <Footer style={item_header_style}>
-          {!item && <ItemDroppable id="Footer" type="COMPONENT" />}
+          {/* {!item && <ItemDroppable id="Footer" type="COMPONENT" />} */}
         </Footer>
       </Layout>
     </Layout>
