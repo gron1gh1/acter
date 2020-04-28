@@ -1,5 +1,4 @@
 import CSS from 'csstype';
-import { ReactElement } from 'react';
 
 export interface IDragging {
     state: boolean;
@@ -7,7 +6,7 @@ export interface IDragging {
 }
 
 export interface IMainState {
-    [key:string]: React.ReactElement[] | ReactElement | null;
+    [key:string]: (React.ReactElement | null)[] | React.ReactElement | null;
 }
 export interface IMenuState{
     MAINVIEW: {

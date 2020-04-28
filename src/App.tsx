@@ -2,7 +2,7 @@ import React, { useState, Fragment } from 'react';
 import { Row, Col, Radio } from 'antd';
 import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux';
-import { IDragging, IMainState, IMenuState,IMainView } from './Interface';
+import { IDragging, IMainState, IMenuState, IMainView } from './Interface';
 import { ActionCreators } from './reducer';
 import Sidebar from './Sidebar';
 import { ItemList } from './StaticData';
@@ -38,15 +38,16 @@ function App() {
 
 
     const dispatch = useDispatch();
-    const MainLayout : React.ReactElement = useSelector((state: IMainState) => state['Layout']) as React.ReactElement; // Get Data from Reducer to this 
+    const MainLayout: React.ReactElement = useSelector((state: IMainState) => state['Layout']) as React.ReactElement; // Get Data from Reducer to this 
 
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;
         let _type = type as keyof IMenuState;
+
         if (!destination || source.droppableId === destination.droppableId) return;
 
         console.log(type, dragging.item, destination.droppableId);
-        dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(destination.droppableId, ItemList[_type][dragging.item]));
+        dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(destination.droppableId.split('-')[0], ItemList[_type][dragging.item]));
         SetDragging({ state: false, item: null });
     }
 

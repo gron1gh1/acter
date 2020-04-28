@@ -5,6 +5,7 @@ import { IMainState } from './Interface';
 // State Init
 const InitState: IMainState = {
     Layout: null,
+    Area: [],
 }
 
 // immer-Reducer
@@ -15,7 +16,10 @@ class MainReducer extends ImmerReducer<IMainState>{
         if (Array.isArray(draft)) // IMainState >> React.ReactElement or React.ReactElement[] Check
         {
             let draft_array = draft as Array<JSX.Element | null>;
-            draft_array.push(item);
+            draft_array.forEach((v,i) => {
+                if(v === null)
+                    draft_array[i] = item;
+            })
         }
         else
         {
@@ -26,6 +30,12 @@ class MainReducer extends ImmerReducer<IMainState>{
     removeComponent(target: string)
     {
         delete this.draftState[target];
+    }
+
+    makeArea()
+    {
+        let draft = this.draftState['Area'] as Array<JSX.Element | null>;
+        draft.push(null);
     }
 }
 

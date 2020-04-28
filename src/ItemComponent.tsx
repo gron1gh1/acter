@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeArea,IMakeBox } from './Interface';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeArea, IMakeBox } from './Interface';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { ActionCreators } from './reducer';
@@ -124,76 +124,82 @@ const MakeBox = styled.div<IMakeBox>`
 `;
 
 function ItemDroppable({ id, type }: IDroppable<IMainState, IMenuState>) {
-  const MainState: IMainState = useSelector((state: IMainState) => state);
-  const key = MainState[id] as React.ReactElement;
-  const dispatch = useDispatch();
-  const [boxColor, SetBoxColor] = useState('RoyalBlue');
-  function Remove() {
-//    dispatch(ActionCreators.addComponent(id, null));
-    dispatch(ActionCreators.removeComponent(id));
-  }
+  const MainArea: React.ReactElement[] = useSelector((state: IMainState) => state['Area'] as React.ReactElement[]);
+  const key = MainArea.length;
+  console.log(MainArea.length);
   return (
     <div>
-      {key ?
-        (
-          <MakeBox boxColor={boxColor} isClick={false}>
-            <RemoveButton onClick={Remove} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
-              <CloseCircleOutlined />
-            </RemoveButton>
-            {React.cloneElement(key)}
-          </MakeBox>
-        ) :
-        (
-          <Droppable droppableId={id} type={type}>
+          <Droppable droppableId={`Area-${key}`} type={type}>
             {(provided, snapshot) => (
               <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
-        )}
-
     </div>
   )
 }
 
 
-function MakeArea({ unique_n }: IMakeArea) {
-  const [m_state, SetMouse] = useState(false);
+function MakeArea() {
 
-  const MainState: IMainState = useSelector((state: IMainState) => state);
-  const key = MainState[`Content-${unique_n}`] as React.ReactElement;
+  //const MainState: IMainState = useSelector((state: IMainState) => state);
+  // const key = MainState[`Content-${unique_n}`] as React.ReactElement;
   const dispatch = useDispatch();
-
+  const MainArea: React.ReactElement[] = useSelector((state: IMainState) => state['Area'] as React.ReactElement[]);
+  function Make() {
+    dispatch(ActionCreators.makeArea());
+    console.log(MainArea);
+  }
   return (
 
-    <MakeBox boxColor="RoyalBlue" isClick={m_state}
-      onMouseDown={() => {
-        SetMouse(true);
-        dispatch(ActionCreators.addComponent(`Content-${unique_n}`, null));
-      }}>
-        {key === undefined && <MakeButton /> /* Reducer MainState Object is No Init */}
-
-        {key === null && (
+    <MakeBox boxColor="RoyalBlue" isClick={false}
+      onClick={Make}>
+      {/* {key === undefined && <MakeButton /> /* Reducer MainState Object is No Init */}
+      {/* key === null && (
           <div>
             <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
             <MakeArea unique_n={unique_n + 1} />
           </div>
-        ) /* Reducer MainState Object is Init */}
+        )  Reducer MainState Object is Init */}
 
-        
-{/*         
-      {m_state === false ?
-        <MakeButton />
-        : (
-          <div>
-            <ItemDroppable id={`Content-${unique_n}`} type="COMPONENT" />
-            <MakeArea unique_n={unique_n + 1} />
-          </div>
-        )
-      } */}
 
+      <MakeButton />
     </MakeBox>
+  )
+}
+
+function Area() {
+  const MainArea: Array<JSX.Element | null> = useSelector((state: IMainState) => state['Area'] as Array<JSX.Element | null>);
+  const [boxColor, SetBoxColor] = useState('RoyalBlue');
+  const dispatch = useDispatch();
+
+  function Remove() {
+    //    dispatch(ActionCreators.addComponent(id, null));
+    //dispatch(ActionCreators.removeComponent(id));
+
+  }
+  return (
+    <div>
+      {MainArea.map((v, idx) => {
+        if (v) {
+          return (
+            <MakeBox boxColor={boxColor} isClick={false}>
+              <RemoveButton onClick={Remove} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
+                <CloseCircleOutlined />
+              </RemoveButton>
+              {React.cloneElement(v)}
+            </MakeBox>
+          )
+        }
+        else if (v === null) {
+          return (
+            <ItemDroppable id="Area" type="COMPONENT" />
+          )
+        }
+      })}
+      <MakeArea />
+    </div>
   )
 }
 export function Layout_1({ item = false, style = { background: 'white' } }: IItem) {
@@ -220,7 +226,7 @@ export function Layout_1({ item = false, style = { background: 'white' } }: IIte
 
 
       <div>
-        {!item && <MakeArea unique_n={0} />}
+        {!item && <Area />}
       </div>
 
     </Layout>
