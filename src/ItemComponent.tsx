@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
@@ -123,11 +123,13 @@ const MakeBox = styled.div<IMakeBox>`
     `}
 `;
 
-function ItemDroppable({ id,key, type }: IDroppable<IMainState, IMenuState>) {
-
+function ItemDroppable({ id,unique_n, type }: IDroppable<IMainState, IMenuState>) {
+  useEffect(()=>{
+    console.log(`Area-${unique_n}`);
+  },[]);
   return (
     <div>
-      <Droppable droppableId={`Area-${key}`} type={type}>
+      <Droppable droppableId={`Area-${unique_n}`} type={type}>
         {(provided, snapshot) => (
           <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
             {provided.placeholder}
@@ -147,7 +149,6 @@ function MakeArea() {
     dispatch(ActionCreators.makeArea());
   }
   return (
-
     <MakeBox boxColor="RoyalBlue" isClick={false}
       onClick={Make}>
       <MakeButton />
@@ -163,7 +164,6 @@ function Area() {
   function Remove() {
     //    dispatch(ActionCreators.addComponent(id, null));
     //dispatch(ActionCreators.removeComponent(id));
-
   }
   return (
     <div>
@@ -179,8 +179,9 @@ function Area() {
           )
         }
         else if (v === null) {
+          console.log(idx);
           return (
-            <ItemDroppable id="Area" key={idx} type="COMPONENT" />
+            <ItemDroppable id="Area" unique_n={idx} type="COMPONENT" />
           )
         }
       })}

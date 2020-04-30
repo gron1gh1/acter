@@ -24,7 +24,7 @@ export interface IItem {
 
 export interface IDroppable<T,Q> {
     id: string;
-    key?: number;
+    unique_n?: number;
     type: keyof Q;
 }
 

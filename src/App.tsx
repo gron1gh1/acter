@@ -47,7 +47,13 @@ function App() {
         if (!destination || source.droppableId === destination.droppableId) return;
 
         console.log(type, dragging.item, destination.droppableId);
-        dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(destination.droppableId.split('-')[0], ItemList[_type][dragging.item]));
+
+        let parser = destination.droppableId.split('-');
+        console.log("a:",parser[1]);
+        if(parser.length === 1)
+            dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item]));
+        else if(parser.length > 1)
+            dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item],parseInt(parser[1])));
         SetDragging({ state: false, item: null });
     }
 
