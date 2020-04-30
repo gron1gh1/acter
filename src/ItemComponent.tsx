@@ -5,7 +5,7 @@ import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { RiDragDropLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeArea, IMakeBox,IDroppableBox } from './Interface';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeArea, IMakeBox, IDroppableBox } from './Interface';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { ActionCreators } from './reducer';
@@ -132,8 +132,12 @@ const MakeBox = styled.div<IMakeBox>`
       }
     `}
 `;
+const InputButton = styled(RiDragDropLine)`
+      display:inline-block;
+`;
 
 const TrashButton = styled(FaTrashAlt)`
+      display:none;
       fontSize:2rem;
       color:DimGray;
       &:hover{
@@ -150,11 +154,26 @@ const DroppableBox = styled.div<IDroppableBox>`
     padding-top:30px;
     padding-bottom: 30px;
     border-bottom: 1px LightGray solid;
-    ${(props) =>
-      props.isDragging &&
-      css`
+    
+    ${InputButton}{
+      display:inline-block;
+    }
+    ${TrashButton}{
+      display:none;
+    }
+    &:hover{
+      ${InputButton}{
+        display:none;
+      }
+      ${TrashButton}{
+        display:inline-block;
+      }
+    }
+    ${(props) => 
+    props.isDragging &&
+    css`
       background:skyblue;
-       
+      
     `}
 `;
 
@@ -164,7 +183,7 @@ function ItemDroppable({ id, unique_n, type }: IDroppable<IMainState, IMenuState
 
   const dispatch = useDispatch();
   function Remove(index: number | undefined) {
-    if(index !== undefined)
+    if (index !== undefined)
       dispatch(ActionCreators.removeArea(index));
   }
 
@@ -172,12 +191,9 @@ function ItemDroppable({ id, unique_n, type }: IDroppable<IMainState, IMenuState
     <div>
       <Droppable droppableId={`Area-${unique_n}`} type={type}>
         {(provided, snapshot) => (
-          <DroppableBox ref={provided.innerRef} isDragging={snapshot.isDraggingOver}
-            onMouseEnter={() => !snapshot.isDraggingOver && SetMouse(true)}
-            onMouseLeave={() => !snapshot.isDraggingOver && SetMouse(false)}>
-              
-            {m_state && <TrashButton fontSize="2rem" onClick={()=>Remove(unique_n)}/>}
-            {!m_state && <RiDragDropLine fontSize="2rem" />}
+          <DroppableBox ref={provided.innerRef} isDragging={snapshot.isDraggingOver}>
+            <InputButton fontSize="2rem" />
+            <TrashButton fontSize="2rem" onClick={() => Remove(unique_n)} />
             {provided.placeholder}
           </DroppableBox>
         )}
@@ -207,7 +223,7 @@ function Area() {
   const dispatch = useDispatch();
 
   function Remove(index: number | undefined) {
-    if(index !== undefined)
+    if (index !== undefined)
       dispatch(ActionCreators.removeArea(index));
   }
   return (
