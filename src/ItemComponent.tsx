@@ -179,7 +179,13 @@ function Area() {
         else if (v === null) {
 
           return (
+            <MakeBox boxColor={boxColor} isClick={false}>
+            <RemoveButton onClick={()=>Remove(idx)} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
+              <CloseCircleOutlined />
+            </RemoveButton>
             <ItemDroppable id="Area" unique_n={idx} type="COMPONENT" />
+          </MakeBox>
+            
           )
         }
       })}
