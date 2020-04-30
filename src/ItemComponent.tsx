@@ -2,11 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { RiDragDropLine } from 'react-icons/ri';
+import { FaTrashAlt } from 'react-icons/fa';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeArea, IMakeBox } from './Interface';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeArea, IMakeBox,IDroppableBox } from './Interface';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { ActionCreators } from './reducer';
+
+
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -69,8 +73,13 @@ export function LoginItem(style: React.CSSProperties) {
 
 const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   background: isDraggingOver ? "lightblue" : "white",
+  cursor: 'default',
   width: '100%',
-  minHeight: '85px'
+  minHeight: '85px',
+  textAlign: 'center',
+  paddingTop: '30px',
+  paddingBottom: '30px',
+  borderBottom: '1px LightGray solid',
 });
 
 export function ButtonItem(style: React.CSSProperties) {
@@ -102,6 +111,7 @@ const MakeButton = styled(PlusCircleOutlined)`
     
 `;
 
+
 const MakeBox = styled.div<IMakeBox>`
     background: GhostWhite;
     text-align: center;
@@ -123,15 +133,53 @@ const MakeBox = styled.div<IMakeBox>`
     `}
 `;
 
-function ItemDroppable({ id,unique_n, type }: IDroppable<IMainState, IMenuState>) {
+const TrashButton = styled(FaTrashAlt)`
+      fontSize:2rem;
+      color:DimGray;
+      &:hover{
+        cursor:pointer;
+        color:Crimson;
+      }
+`;
+
+const DroppableBox = styled.div<IDroppableBox>`
+    cursor: default;
+    width:100%;
+    min-height:85px;
+    text-align:center;
+    padding-top:30px;
+    padding-bottom: 30px;
+    border-bottom: 1px LightGray solid;
+    ${(props) =>
+      props.isDragging &&
+      css`
+      background:skyblue;
+       
+    `}
+`;
+
+
+function ItemDroppable({ id, unique_n, type }: IDroppable<IMainState, IMenuState>) {
+  const [m_state, SetMouse] = useState(false);
+
+  const dispatch = useDispatch();
+  function Remove(index: number | undefined) {
+    if(index !== undefined)
+      dispatch(ActionCreators.removeArea(index));
+  }
 
   return (
     <div>
       <Droppable droppableId={`Area-${unique_n}`} type={type}>
         {(provided, snapshot) => (
-          <div ref={provided.innerRef} style={getViewStyle(snapshot.isDraggingOver)}>
+          <DroppableBox ref={provided.innerRef} isDragging={snapshot.isDraggingOver}
+            onMouseEnter={() => !snapshot.isDraggingOver && SetMouse(true)}
+            onMouseLeave={() => !snapshot.isDraggingOver && SetMouse(false)}>
+              
+            {m_state && <TrashButton fontSize="2rem" onClick={()=>Remove(unique_n)}/>}
+            {!m_state && <RiDragDropLine fontSize="2rem" />}
             {provided.placeholder}
-          </div>
+          </DroppableBox>
         )}
       </Droppable>
     </div>
@@ -142,7 +190,6 @@ function ItemDroppable({ id,unique_n, type }: IDroppable<IMainState, IMenuState>
 function MakeArea() {
 
   const dispatch = useDispatch();
-  const MainArea: React.ReactElement[] = useSelector((state: IMainState) => state['Area'] as React.ReactElement[]);
   function Make() {
     dispatch(ActionCreators.makeArea());
   }
@@ -159,9 +206,9 @@ function Area() {
   const [boxColor, SetBoxColor] = useState('RoyalBlue');
   const dispatch = useDispatch();
 
-  function Remove(index : number) {
-    //    dispatch(ActionCreators.addComponent(id, null));
-    dispatch(ActionCreators.removeArea(index));
+  function Remove(index: number | undefined) {
+    if(index !== undefined)
+      dispatch(ActionCreators.removeArea(index));
   }
   return (
     <div>
@@ -169,7 +216,8 @@ function Area() {
         if (v) {
           return (
             <MakeBox boxColor={boxColor} isClick={false}>
-              <RemoveButton onClick={()=>Remove(idx)} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
+
+              <RemoveButton onClick={() => Remove(idx)} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
                 <CloseCircleOutlined />
               </RemoveButton>
               {React.cloneElement(v)}
@@ -179,13 +227,10 @@ function Area() {
         else if (v === null) {
 
           return (
-            <MakeBox boxColor={boxColor} isClick={false}>
-            <RemoveButton onClick={()=>Remove(idx)} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
-              <CloseCircleOutlined />
-            </RemoveButton>
-            <ItemDroppable id="Area" unique_n={idx} type="COMPONENT" />
-          </MakeBox>
-            
+            <MakeBox boxColor={boxColor} isClick={true}>
+              <ItemDroppable id="Area" unique_n={idx} type="COMPONENT" />
+            </MakeBox>
+
           )
         }
       })}

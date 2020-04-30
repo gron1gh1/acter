@@ -37,6 +37,10 @@ export interface IMainView {
 }
 
 export interface IMakeBox {
-    boxColor: string;
-    isClick: boolean;
-  }
+    boxColor?: string;
+    isClick?: boolean;
+
+}
+export interface IDroppableBox{
+    isDragging?: boolean;
+}
