@@ -124,9 +124,7 @@ const MakeBox = styled.div<IMakeBox>`
 `;
 
 function ItemDroppable({ id,unique_n, type }: IDroppable<IMainState, IMenuState>) {
-  useEffect(()=>{
-    console.log(`Area-${unique_n}`);
-  },[]);
+
   return (
     <div>
       <Droppable droppableId={`Area-${unique_n}`} type={type}>
@@ -161,9 +159,9 @@ function Area() {
   const [boxColor, SetBoxColor] = useState('RoyalBlue');
   const dispatch = useDispatch();
 
-  function Remove() {
+  function Remove(index : number) {
     //    dispatch(ActionCreators.addComponent(id, null));
-    //dispatch(ActionCreators.removeComponent(id));
+    dispatch(ActionCreators.removeArea(index));
   }
   return (
     <div>
@@ -171,7 +169,7 @@ function Area() {
         if (v) {
           return (
             <MakeBox boxColor={boxColor} isClick={false}>
-              <RemoveButton onClick={Remove} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
+              <RemoveButton onClick={()=>Remove(idx)} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
                 <CloseCircleOutlined />
               </RemoveButton>
               {React.cloneElement(v)}
@@ -179,7 +177,7 @@ function Area() {
           )
         }
         else if (v === null) {
-          console.log(idx);
+
           return (
             <ItemDroppable id="Area" unique_n={idx} type="COMPONENT" />
           )

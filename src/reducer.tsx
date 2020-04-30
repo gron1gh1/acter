@@ -29,8 +29,9 @@ class MainReducer extends ImmerReducer<IMainState>{
         }
     }
 
-    removeComponent(target: string) {
-        delete this.draftState[target];
+    removeArea(index : number) {
+        let draft = this.draftState['Area'] as Array<JSX.Element | null>;
+        draft.splice(index,1);
     }
 
     makeArea() {

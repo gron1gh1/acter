@@ -49,7 +49,7 @@ function App() {
         console.log(type, dragging.item, destination.droppableId);
 
         let parser = destination.droppableId.split('-');
-        console.log("a:",parser[1]);
+
         if(parser.length === 1)
             dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item]));
         else if(parser.length > 1)
