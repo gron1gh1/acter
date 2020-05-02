@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { AiFillCode } from 'react-icons/ai';
 import { RiDragDropLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
@@ -90,25 +91,41 @@ export function ButtonItem(style: React.CSSProperties) {
   )
 }
 
-const RemoveButton = styled.div`
-    display: none;
-    margin-top:15px;
-    margin-bottom:15px;
-    font-size:2rem;
-    color:LightSteelBlue;
-    &:hover{
-      color:Crimson;
-    }
-    
-`;
-
 
 const MakeButton = styled(PlusCircleOutlined)`
     font-size:2rem;
     padding-top:30px;
     padding-bottom:30px;
     color:black;
-    
+`;
+const InnerBox = styled.div<IMakeBox>`
+    display:none;
+    margin-bottom:5px;
+    width:100%;
+    height:50px;
+    cursor: default;
+    ${(props) => css`
+      background: ${props.boxColor};   
+    `}
+`;
+
+const InnerCodeButton = styled(AiFillCode)`
+    margin: 15px 7px 15px 7px;
+    font-size:1.5rem;
+    color:GhostWhite;
+    &:hover{
+      cursor: pointer;
+      color:LightGray;
+    }
+`;
+const InnerTrashButton = styled(FaTrashAlt)`
+    margin: 15px 7px 15px 7px;
+    font-size:1.5rem;
+    color:GhostWhite;
+    &:hover{
+      cursor: pointer;
+      color:LightGray;
+    }
 `;
 
 
@@ -116,18 +133,21 @@ const MakeBox = styled.div<IMakeBox>`
     background: GhostWhite;
     text-align: center;
     width: 100%;
+
     ${(props) =>
     props.isClick === false &&
     css`
       cursor:pointer;
       &:hover{
+        
         box-shadow: 0 0 0 1px ${props.boxColor} inset;
         ${MakeButton}{
           color:RoyalBlue;
         }
-        ${RemoveButton}{
-          display:inline-block;
+        ${InnerBox}{
+          display:block;
         }
+        
         
       }
     `}
@@ -142,7 +162,7 @@ const TrashButton = styled(FaTrashAlt)`
       color:DimGray;
       &:hover{
         cursor:pointer;
-        color:Crimson;
+        color:IndianRed;
       }
 `;
 
@@ -161,19 +181,26 @@ const DroppableBox = styled.div<IDroppableBox>`
     ${TrashButton}{
       display:none;
     }
-    &:hover{
-      ${InputButton}{
-        display:none;
-      }
-      ${TrashButton}{
-        display:inline-block;
-      }
-    }
-    ${(props) => 
+    
+
+    ${(props) =>
     props.isDragging &&
     css`
       background:skyblue;
       
+    `}
+
+    ${(props) =>
+    !props.isDragging &&
+    css`
+      &:hover{
+        ${InputButton}{
+          display:none;
+        }
+        ${TrashButton}{
+          display:inline-block;
+        }
+      }
     `}
 `;
 
@@ -232,10 +259,10 @@ function Area() {
         if (v) {
           return (
             <MakeBox boxColor={boxColor} isClick={false}>
-
-              <RemoveButton onClick={() => Remove(idx)} onMouseEnter={() => SetBoxColor('Crimson')} onMouseLeave={() => SetBoxColor('RoyalBlue')}>
-                <CloseCircleOutlined />
-              </RemoveButton>
+              <InnerBox boxColor={boxColor}>
+                <InnerCodeButton />
+                <InnerTrashButton onClick={() => Remove(idx)} onMouseEnter={() => SetBoxColor('IndianRed')} onMouseLeave={() => SetBoxColor('RoyalBlue')} />
+              </InnerBox>
               {React.cloneElement(v)}
             </MakeBox>
           )
