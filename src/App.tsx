@@ -7,7 +7,7 @@ import { ActionCreators } from './reducer';
 import Sidebar from './Sidebar';
 import { ItemList } from './StaticData';
 import { Scrollbars } from 'react-custom-scrollbars';
-
+import reactElementToJSXString from 'react-element-to-jsx-string';
 const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     background: isDraggingOver ? "lightblue" : "white",
     width: '1024px',
@@ -45,13 +45,16 @@ function App() {
         let _type = type as keyof IMenuState;
 
         if (!destination || source.droppableId === destination.droppableId) return;
-
+        
         console.log(type, dragging.item, destination.droppableId);
 
         let parser = destination.droppableId.split('-');
 
         if(parser.length === 1)
+        {
             dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item]));
+            dragging.item && console.log(reactElementToJSXString(ItemList[_type][dragging.item]));
+        }
         else if(parser.length > 1)
             dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item],parseInt(parser[1])));
         SetDragging({ state: false, item: null });
@@ -69,18 +72,19 @@ function App() {
                         <Sidebar />
                     </Col>
                     <Col flex="auto" style={{
-                        background: 'lightgray', height: '100vh',
-                        display: 'flex', flexDirection: 'column',
-                        alignItems: 'center', justifyContent: 'center',
+                        background: 'lightgray', height: '100vh'
                     }}>
-                        <div style={{ marginLeft: '-870px' }}>
+                        <Scrollbars >
+                            <div style={{marginLeft:'50px',marginTop:'50px'}}>
 
-                            <Radio.Group defaultValue="PREVIEW" buttonStyle="solid">
-                                <Radio.Button value="PREVIEW">PREVIEW</Radio.Button>
-                                <Radio.Button value="CODE">CODE</Radio.Button>
-                            </Radio.Group>
-                        </div>
-                        <MainView MainLayout={MainLayout} />
+                                <Radio.Group defaultValue="PREVIEW" buttonStyle="solid">
+                                    <Radio.Button value="PREVIEW">PREVIEW</Radio.Button>
+                                    <Radio.Button value="CODE">CODE</Radio.Button>
+                                </Radio.Group>
+                                <MainView MainLayout={MainLayout} />
+                            </div>
+                            
+                        </Scrollbars>
                     </Col>
                 </Row>
             </Fragment>
