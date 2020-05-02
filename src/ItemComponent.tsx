@@ -282,7 +282,6 @@ function Area() {
   )
 }
 export function Layout_1({ item = false, style = { background: 'white' } }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: React.CSSProperties = {};
   var item_content_style: React.CSSProperties = {};
