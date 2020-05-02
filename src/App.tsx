@@ -15,7 +15,7 @@ import renderer from "react-test-renderer";
 import { store } from './reducer';
 import { Provider } from 'react-redux';
 import { Layout_1 } from './ItemComponent';
-import { shallow } from 'enzyme'; 
+import { shallow } from 'enzyme';
 
 const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     background: isDraggingOver ? "lightblue" : "white",
@@ -84,18 +84,21 @@ function App() {
                 //         <MainView MainLayout={ItemList[_type][dragging.item]} />
                 //     </DragDropContext>
                 // </Provider>));
-                
-                const AB = [<h1>Hello CodeSandbox" </h1>, <h2>Start editing to see some magic happen!</h2>];
-              //  console.log(reactElementToJSXString(App2()));
+
                 // console.log(prettyFormat(renderer.create(
                 //     <Provider store={store}>
                 //         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
                 //             <MainView MainLayout={ItemList[_type][dragging.item]} />
                 //         </DragDropContext>
                 //     </Provider>), {
-                //     plugins: [prettyFormat.plugins.ReactTestComponent],
-                //     printFunctionName: false
+                //     plugins: [prettyFormat.plugins.ReactElement],
+                //     printFunctionName: true
                 // }));
+
+                console.log(reactElementToJSXString(
+                    <MainView MainLayout={Layout_1} />, {
+                        showFunctions: true,
+                    }));
             }
         }
         else if (parser.length > 1)
@@ -115,7 +118,7 @@ function App() {
                         <Sidebar />
                     </Col>
                     <Col flex="auto" style={{
-                        background: 'lightgray', height: '100vh'
+                        background: 'lightgray'
                     }}>
                         <Scrollbars >
                             <div style={{ marginLeft: '50px', marginTop: '50px' }}>

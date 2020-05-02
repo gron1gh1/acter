@@ -33,7 +33,7 @@ export interface IMakeArea{
 }
 
 export interface IMainView {
-    MainLayout: React.ReactElement | null;
+    MainLayout: React.ReactElement | null | any; // any 임시로 해놓음 테스트용.
 }
 
 export interface IMakeBox {
