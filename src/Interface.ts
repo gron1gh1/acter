@@ -36,6 +36,10 @@ export interface IMainView {
     MainLayout: React.ReactElement | null | any; // any 임시로 해놓음 테스트용.
 }
 
+export interface IMemoryShow {
+    MainArea: Array<JSX.Element | null>
+}
+
 export interface IMakeBox {
     boxColor?: string;
     isClick?: boolean;

@@ -85,9 +85,9 @@ const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
 
 export function ButtonItem(style: React.CSSProperties) {
   return (
-    <Layout style={style}>
+
       <Button type="primary">Primary</Button>
-    </Layout>
+
   )
 }
 

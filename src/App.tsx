@@ -1,12 +1,20 @@
 import React, { useState, Fragment } from 'react';
 import { Row, Col, Radio } from 'antd';
+import { RadioChangeEvent } from 'antd/lib/radio';
+
 import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux';
-import { IDragging, IMainState, IMenuState, IMainView } from './Interface';
+import { IDragging, IMainState, IMenuState, IMainView, IMemoryShow } from './Interface';
 import { ActionCreators } from './reducer';
 import Sidebar from './Sidebar';
 import { ItemList } from './StaticData';
 import { Scrollbars } from 'react-custom-scrollbars';
+import {
+    LiveProvider,
+    LiveEditor,
+    LiveError,
+    LivePreview
+} from 'react-live'
 
 import ReactDOMServer from 'react-dom/server';
 import reactElementToJSXString from 'react-element-to-jsx-string';
@@ -15,7 +23,13 @@ import renderer from "react-test-renderer";
 import { store } from './reducer';
 import { Provider } from 'react-redux';
 import { Layout_1 } from './ItemComponent';
-import { shallow } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
+import ShallowRenderer from 'react-test-renderer/shallow';
+
+import { shallow, configure, mount } from 'enzyme';
+
+configure({ adapter: new Adapter() });
 
 const getMainViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
     background: isDraggingOver ? "lightblue" : "white",
@@ -42,29 +56,39 @@ function MainView({ MainLayout }: IMainView) {
     )
 }
 
-function App2() {
-    const [state, A] = useState(true);
-    const AB = [<h1>Hello CodeSandbox" </h1>, <h2>Start editing to see some magic happen!</h2>];
+
+const scope = {Radio};
+function CodeView() {
     return (
-        <div
-            className="App"
-        >
-            {AB.map((v) => {
-                React.cloneElement(v);
-            })
-            }
-            <h1>Hello CodeSandbox" </h1>
-            <h2>Start editing to see some magic happen!</h2>
+        <div style={getMainViewStyle(false)}>
+            <LiveProvider code="<strong>Hello World!</strong>" scope={scope}>
+                <LiveEditor />
+                <LiveError />
+                <LivePreview />
+            </LiveProvider>
         </div>
-    );
+    )
 }
 
+function MemoryShow({ MainArea }: IMemoryShow) {
+    return (
+        <div>
+
+            {MainArea.map((v, idx) => {
+                if (v)
+                    return React.cloneElement(v)
+            })}
+
+        </div>
+    )
+}
 function App() {
     const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null }); // Item information at start of drag
-
+    const [showState, SetShowState] = useState('PREVIEW');
 
     const dispatch = useDispatch();
     const MainLayout: React.ReactElement = useSelector((state: IMainState) => state['Layout']) as React.ReactElement; // Get Data from Reducer to this 
+    const MainArea: Array<JSX.Element | null> = useSelector((state: IMainState) => state['Area'] as Array<JSX.Element | null>);
 
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;
@@ -79,30 +103,39 @@ function App() {
         if (parser.length === 1) {
             if (dragging.item) {
                 ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item]));
-                // console.log(ReactDOMServer.renderToStaticMarkup(<Provider store={store}>
-                //     <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-                //         <MainView MainLayout={ItemList[_type][dragging.item]} />
-                //     </DragDropContext>
-                // </Provider>));
 
-                // console.log(prettyFormat(renderer.create(
-                //     <Provider store={store}>
-                //         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
-                //             <MainView MainLayout={ItemList[_type][dragging.item]} />
-                //         </DragDropContext>
-                //     </Provider>), {
+
+                // console.log(prettyFormat(
+                //     en.getElement(), {
                 //     plugins: [prettyFormat.plugins.ReactElement],
                 //     printFunctionName: true
                 // }));
+                // const en = mount(<Provider store={store}>
+                //     <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+                //         <MainView MainLayout={ItemList[_type][dragging.item]} />
+                //     </DragDropContext>
+                // </Provider>);
+                // console.log(en.debug());
 
-                console.log(reactElementToJSXString(
-                    <MainView MainLayout={Layout_1} />, {
-                        showFunctions: true,
-                    }));
+
+                // const FIND = shallow(en2.find('Layout_1').dive().find('Area').dive().getElement(), { wrappingComponent: WrappingComponent });
+                // const provider = FIND.getWrappingComponent();
+                // provider.setProps({ customStore: store })
+                // console.log(
+                //     FIND
+                //         .debug());
+
             }
         }
-        else if (parser.length > 1)
+        else if (parser.length > 1) {
             dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item], parseInt(parser[1])));
+
+            const en2 = shallow(
+                <MemoryShow MainArea={MainArea} />);
+            console.log(en2.debug());
+
+
+        }
         SetDragging({ state: false, item: null });
     }
 
@@ -110,6 +143,9 @@ function App() {
         SetDragging({ state: true, item: result.draggableId });
     }
 
+    function onRadioChange(e: RadioChangeEvent) {
+        SetShowState(e.target.value);
+    }
     return (
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
             <Fragment>
@@ -123,11 +159,12 @@ function App() {
                         <Scrollbars >
                             <div style={{ marginLeft: '50px', marginTop: '50px' }}>
 
-                                <Radio.Group defaultValue="PREVIEW" buttonStyle="solid">
+                                <Radio.Group defaultValue="PREVIEW" buttonStyle="solid" onChange={onRadioChange}>
                                     <Radio.Button value="PREVIEW">PREVIEW</Radio.Button>
                                     <Radio.Button value="CODE">CODE</Radio.Button>
                                 </Radio.Group>
-                                <MainView MainLayout={MainLayout} />
+                                {showState === 'PREVIEW' && <MainView MainLayout={MainLayout} />}
+                                {showState === 'CODE' && <CodeView />}
                             </div>
 
                         </Scrollbars>
