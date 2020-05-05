@@ -4,8 +4,8 @@ import { RadioChangeEvent } from 'antd/lib/radio';
 
 import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux';
-import { IDragging, IMainState, IMenuState, IMainView, IMemoryShow } from './Interface';
-import { ActionCreators } from './reducer';
+import { IDragging, IMenuState, IMainView, IMemoryShow,ISelect } from './Interface';
+import { MainActions,CodeActions } from './reducer';
 import Sidebar from './Sidebar';
 import { ItemList } from './StaticData';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -53,14 +53,15 @@ function MemoryShow({ MainArea }: IMemoryShow) {
         </div>
     )
 }
+
 function App() {
     const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null }); // Item information at start of drag
     const [showState, SetShowState] = useState('PREVIEW');
 
     const dispatch = useDispatch();
-    const MainLayout: React.ReactElement = useSelector((state: IMainState) => state['Layout']) as React.ReactElement; // Get Data from Reducer to this 
-    const MainArea: Array<JSX.Element | null> = useSelector((state: IMainState) => state['Area'] as Array<JSX.Element | null>);
-
+    const MainLayout: React.ReactElement = useSelector((state: ISelect) => state.mainReducer['Layout']) as React.ReactElement; // Get Data from Reducer to this 
+    const MainArea: Array<JSX.Element | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<JSX.Element | null>);
+    
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;
         let _type = type as keyof IMenuState;
@@ -73,17 +74,17 @@ function App() {
 
         if (parser.length === 1) {
             if (dragging.item) {
-                ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item]));
+                ItemList[_type] && dispatch(MainActions.addComponent(parser[0], ItemList[_type][dragging.item]));
 
             }
         }
         else if (parser.length > 1) {
-            dragging.item && ItemList[_type] && dispatch(ActionCreators.addComponent(parser[0], ItemList[_type][dragging.item], parseInt(parser[1])));
+            dragging.item && ItemList[_type] && dispatch(MainActions.addComponent(parser[0], ItemList[_type][dragging.item], parseInt(parser[1])));
 
             const en2 = shallow(
                 <MemoryShow MainArea={MainArea} />);
             console.log(en2.debug());
-
+            dispatch(CodeActions.SetCode(en2.debug()));
 
         }
         SetDragging({ state: false, item: null });

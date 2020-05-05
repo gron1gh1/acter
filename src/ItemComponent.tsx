@@ -1,15 +1,15 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
-import { PlusCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { AiFillCode } from 'react-icons/ai';
 import { RiDragDropLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeArea, IMakeBox, IDroppableBox } from './Interface';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISelect } from './Interface';
+import { useDispatch, useSelector, } from 'react-redux';
 import styled, { css } from 'styled-components';
-import { ActionCreators } from './reducer';
+import { MainActions } from './reducer';
 
 
 const { Header, Footer, Sider } = Layout;
@@ -211,7 +211,7 @@ function ItemDroppable({ id, unique_n, type }: IDroppable<IMainState, IMenuState
   const dispatch = useDispatch();
   function Remove(index: number | undefined) {
     if (index !== undefined)
-      dispatch(ActionCreators.removeArea(index));
+      dispatch(MainActions.removeArea(index));
   }
 
   return (
@@ -234,7 +234,7 @@ function MakeArea() {
 
   const dispatch = useDispatch();
   function Make() {
-    dispatch(ActionCreators.makeArea());
+    dispatch(MainActions.makeArea());
   }
   return (
     <MakeBox boxColor="RoyalBlue" isClick={false}
@@ -245,13 +245,13 @@ function MakeArea() {
 }
 
 function Area() {
-  const MainArea: Array<JSX.Element | null> = useSelector((state: IMainState) => state['Area'] as Array<JSX.Element | null>);
+  const MainArea: Array<JSX.Element | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<JSX.Element | null>);
   const [boxColor, SetBoxColor] = useState('RoyalBlue');
   const dispatch = useDispatch();
 
   function Remove(index: number | undefined) {
     if (index !== undefined)
-      dispatch(ActionCreators.removeArea(index));
+      dispatch(MainActions.removeArea(index));
   }
   return (
     <div>
@@ -311,7 +311,6 @@ export function Layout_1({ item = false, style = { background: 'white' } }: IIte
   )
 }
 export function Layout_2({ item = false, style = {} }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: React.CSSProperties = {};
   var item_content_style: React.CSSProperties = {};
@@ -353,7 +352,6 @@ export function Layout_2({ item = false, style = {} }: IItem) {
   )
 }
 export function Layout_3({ item = false, style = {} }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: React.CSSProperties = {};
   var item_content_style: React.CSSProperties = {};
@@ -396,7 +394,6 @@ export function Layout_3({ item = false, style = {} }: IItem) {
 
 //export function Layout_4({ item, style,sidebar } : Item) {
 export function Layout_4({ item = false, style = {} }: IItem) {
-  const Content: React.ReactElement[] = useSelector((state: IMainState) => state.Content) as React.ReactElement[];
 
   var item_header_style: React.CSSProperties = {};
   var item_content_style: React.CSSProperties = {};

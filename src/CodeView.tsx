@@ -1,4 +1,5 @@
-import React, { useState, Fragment } from 'react';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import {
     LiveProvider,
@@ -8,6 +9,7 @@ import {
     
 } from 'react-live'
 import { PrismTheme} from 'prism-react-renderer';
+import { ICodeState, ISelect } from './Interface';
 
 const scope = {};
 
@@ -23,9 +25,11 @@ const StyledLiveEditor = styled(LiveEditor)`
     caret-color: rgb(197,200,198);
 `;
 export function CodeView() {
+    const CodeData : string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this 
+    
     return (
         <WrapperCode>
-            <LiveProvider code="<strong>Hello World!</strong>" scope={scope} >
+            <LiveProvider code={CodeData ? CodeData : "Hello World"} scope={scope} >
                 <StyledLiveEditor />
                 <LiveError />
                 <LivePreview/>

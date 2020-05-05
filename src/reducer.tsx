@@ -1,9 +1,9 @@
-import { createStore } from "redux";
-import { createActionCreators, createReducerFunction, ImmerReducer } from "immer-reducer";
-import { IMainState } from './Interface';
+import { createStore, combineReducers } from "redux";
+import { createActionCreators, createReducerFunction, ImmerReducer,composeReducers } from "immer-reducer";
+import { IMainState,ICodeState } from './Interface';
 
 // State Init
-const InitState: IMainState = {
+const InitState: (IMainState) = {
     Layout: null,
     Area: [],
 }
@@ -39,8 +39,21 @@ class MainReducer extends ImmerReducer<IMainState>{
         draft.push(null);
     }
 }
+const CodeState: ICodeState ={
+    Code : null
+}
+
+class CodeReducer extends ImmerReducer<ICodeState>{
+   SetCode(code : string)
+   {
+       this.draftState.Code = code;
+   }
+}
 
 // Export (Store) and (Function for Dispatch)
-export const ActionCreators = createActionCreators(MainReducer);
-const reducerFunction = createReducerFunction(MainReducer, InitState);
-export const store = createStore(reducerFunction);
+export const MainActions = createActionCreators(MainReducer);
+export const CodeActions = createActionCreators(CodeReducer);
+const mainReducer = createReducerFunction(MainReducer, InitState);
+const codeReducer = createReducerFunction(CodeReducer, CodeState);
+const rootReducer = combineReducers({mainReducer,codeReducer});
+export const store = createStore(rootReducer);

@@ -8,6 +8,16 @@ export interface IDragging {
 export interface IMainState {
     [key:string]: (React.ReactElement | null)[] | React.ReactElement | null;
 }
+
+export interface ICodeState{
+    Code: string | null;
+}
+
+export interface ISelect{
+    mainReducer: IMainState;
+    codeReducer: ICodeState;
+}
+
 export interface IMenuState{
     MAINVIEW: {
         [key: string]: React.ReactElement | null
@@ -16,7 +26,6 @@ export interface IMenuState{
         [key: string]: React.ReactElement | null
     };
 }
-
 export interface IItem {
     item?: boolean;
     style?: CSS.Properties;
