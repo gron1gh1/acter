@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -6,12 +6,10 @@ import {
     LiveEditor,
     LiveError,
     LivePreview,
-    
-} from 'react-live'
-import { PrismTheme} from 'prism-react-renderer';
-import { ICodeState, ISelect } from './Interface';
 
-const scope = {};
+} from 'react-live'
+import { ISelect } from './Interface';
+import * as Item from './ItemComponent';
 
 const WrapperCode = styled.div`
     display:flex;
@@ -24,15 +22,28 @@ const StyledLiveEditor = styled(LiveEditor)`
     background: rgb(50,42,56);
     caret-color: rgb(197,200,198);
 `;
+const scope = () => {
+    let res = {};
+    Object.keys(Item).forEach((v, i) => {
+        Object.assign(res, { [v]: Object.values(Item)[i] });
+    });
+    return res;
+}
+
+const scope2 = { LoginItem: Item.LoginItem };
+
 export function CodeView() {
-    const CodeData : string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this 
-    
+    const CodeData: string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this 
+    useEffect(() => {
+        console.log(scope());
+
+    }, [])
     return (
         <WrapperCode>
-            <LiveProvider code={CodeData ? CodeData : "Hello World"} scope={scope} >
+            <LiveProvider code={CodeData ? CodeData : "Hello World"} scope={scope()}>
                 <StyledLiveEditor />
                 <LiveError />
-                <LivePreview/>
+                <LivePreview />
             </LiveProvider>
         </WrapperCode>
     )

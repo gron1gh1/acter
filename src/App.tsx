@@ -64,9 +64,9 @@ function App() {
 
 
     useEffect(() => {
-        const en2 = shallow(
+        const virtual = shallow(
             <MemoryShow MainArea={MainArea} />);
-        dispatch(CodeActions.SetCode(en2.debug()));
+        dispatch(CodeActions.SetCode(virtual.debug()));
 
     }, [MainArea])
 
