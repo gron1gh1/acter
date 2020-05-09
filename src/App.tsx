@@ -1,15 +1,15 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { Row, Col, Radio } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from 'react-redux';
-import { IDragging, IMenuState, IMainView, IMemoryShow,ISelect } from './Interface';
-import { MainActions,CodeActions } from './reducer';
+import { IDragging, IMenuState, IMainView, IMemoryShow, ISelect } from './Interface';
+import { MainActions, CodeActions } from './reducer';
 import Sidebar from './Sidebar';
 import { ItemList } from './StaticData';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { CodeView} from './CodeView';
+import { CodeView } from './CodeView';
 
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure, mount } from 'enzyme';
@@ -61,7 +61,15 @@ function App() {
     const dispatch = useDispatch();
     const MainLayout: React.ReactElement = useSelector((state: ISelect) => state.mainReducer['Layout']) as React.ReactElement; // Get Data from Reducer to this 
     const MainArea: Array<JSX.Element | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<JSX.Element | null>);
-    
+
+
+    useEffect(() => {
+        const en2 = shallow(
+            <MemoryShow MainArea={MainArea} />);
+        dispatch(CodeActions.SetCode(en2.debug()));
+
+    }, [MainArea])
+
     function onDragEnd(result: DropResult) {
         const { source, destination, type } = result;
         let _type = type as keyof IMenuState;
@@ -80,11 +88,6 @@ function App() {
         }
         else if (parser.length > 1) {
             dragging.item && ItemList[_type] && dispatch(MainActions.addComponent(parser[0], ItemList[_type][dragging.item], parseInt(parser[1])));
-
-            const en2 = shallow(
-                <MemoryShow MainArea={MainArea} />);
-            console.log(en2.debug());
-            dispatch(CodeActions.SetCode(en2.debug()));
 
         }
         SetDragging({ state: false, item: null });
