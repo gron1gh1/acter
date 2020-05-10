@@ -22,11 +22,14 @@ const StyledLiveEditor = styled(LiveEditor)`
     background: rgb(50,42,56);
     caret-color: rgb(197,200,198);
 `;
+
 const scope = () => {
     let res = {};
-    Object.keys(Item).forEach((v, i) => {
-        Object.assign(res, { [v]: Object.values(Item)[i] });
-    });
+    
+    Object.values(Item).forEach((v,i)=>{
+        let name = v.name;
+        Object.assign(res, { [name] : v });
+    })
     return res;
 }
 
