@@ -1,12 +1,12 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { AiFillCode } from 'react-icons/ai';
 import { RiDragDropLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISelect } from './Interface';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISelect,IAreaWrapper } from './Interface';
 import { useDispatch, useSelector, } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { MainActions } from './reducer';
@@ -85,9 +85,7 @@ const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
 
 export function ButtonItem(style: React.CSSProperties) {
   return (
-
-      <Button type="primary">Primary</Button>
-
+    <Button type="primary">Primary</Button>
   )
 }
 
@@ -99,7 +97,8 @@ const MakeButton = styled(PlusCircleOutlined)`
     color:black;
 `;
 const InnerBox = styled.div<IMakeBox>`
-    display:none;
+
+   display:none;
     margin-bottom:5px;
     width:100%;
     height:50px;
@@ -107,6 +106,7 @@ const InnerBox = styled.div<IMakeBox>`
     ${(props) => css`
       background: ${props.boxColor};   
     `}
+
 `;
 
 const InnerCodeButton = styled(AiFillCode)`
@@ -139,16 +139,10 @@ const MakeBox = styled.div<IMakeBox>`
     css`
       cursor:pointer;
       &:hover{
-        
         box-shadow: 0 0 0 1px ${props.boxColor} inset;
         ${MakeButton}{
           color:RoyalBlue;
         }
-        ${InnerBox}{
-          display:block;
-        }
-        
-        
       }
     `}
 `;
@@ -206,7 +200,6 @@ const DroppableBox = styled.div<IDroppableBox>`
 
 
 function ItemDroppable({ id, unique_n, type }: IDroppable<IMainState, IMenuState>) {
-  const [m_state, SetMouse] = useState(false);
 
   const dispatch = useDispatch();
   function Remove(index: number | undefined) {
@@ -244,21 +237,35 @@ function MakeArea() {
   )
 }
 
+//AreaWrapper > Clicked Component InnerBox Output
+const AreaWrapper = styled.div<IAreaWrapper>` 
+    ${(props) => css`
+        ${MakeBox}:nth-child(${props.cursel}) ${InnerBox}{
+          display: block;
+        } 
+    `} 
+`;
+
 function Area() {
   const MainArea: Array<JSX.Element | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<JSX.Element | null>);
   const [boxColor, SetBoxColor] = useState('RoyalBlue');
+  const [cursel, SetCusel] = useState(-1);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(cursel);
+  }, [cursel]);
 
   function Remove(index: number | undefined) {
     if (index !== undefined)
       dispatch(MainActions.removeArea(index));
   }
   return (
-    <div>
+    <AreaWrapper cursel={cursel}>
       {MainArea.map((v, idx) => {
         if (v) {
           return (
-            <MakeBox boxColor={boxColor} isClick={false}>
+            <MakeBox boxColor={boxColor} isClick={false} onClick={() => { SetCusel(idx + 1) }}>
               <InnerBox boxColor={boxColor}>
                 <InnerCodeButton />
                 <InnerTrashButton onClick={() => Remove(idx)} onMouseEnter={() => SetBoxColor('IndianRed')} onMouseLeave={() => SetBoxColor('RoyalBlue')} />
@@ -278,7 +285,7 @@ function Area() {
         }
       })}
       <MakeArea />
-    </div>
+    </AreaWrapper>
   )
 }
 export function Layout_1({ item = false, style = { background: 'white' } }: IItem) {

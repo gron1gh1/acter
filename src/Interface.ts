@@ -57,3 +57,6 @@ export interface IMakeBox {
 export interface IDroppableBox{
     isDragging?: boolean;
 }
+export interface IAreaWrapper {
+    cursel: number;
+}

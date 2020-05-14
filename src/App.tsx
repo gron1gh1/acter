@@ -110,7 +110,7 @@ function App() {
                     <Col flex="auto" style={{
                         background: 'lightgray'
                     }}>
-                        <Scrollbars >
+                        <Scrollbars autoHide>
                             <div style={{ marginLeft: '50px', marginTop: '50px' }}>
 
                                 <Radio.Group defaultValue="PREVIEW" buttonStyle="solid" onChange={onRadioChange}>
@@ -122,6 +122,10 @@ function App() {
                             </div>
 
                         </Scrollbars>
+                        
+                    </Col>
+                    <Col flex="264px" style={{ background: 'white', height: '100vh' }}>
+                        
                     </Col>
                 </Row>
             </Fragment>
