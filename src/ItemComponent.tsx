@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { AiFillCode } from 'react-icons/ai';
@@ -10,6 +10,7 @@ import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISe
 import { useDispatch, useSelector, } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { MainActions } from './reducer';
+import extractCSS from 'component-css-extractor';
 
 
 const { Header, Footer, Sider } = Layout;
@@ -270,6 +271,7 @@ function Area() {
                 <InnerCodeButton />
                 <InnerTrashButton onClick={() => Remove(idx)} onMouseEnter={() => SetBoxColor('IndianRed')} onMouseLeave={() => SetBoxColor('RoyalBlue')} />
               </InnerBox>
+              {/* extractCSS(ref.current) 여기부터 시작 css 추출 */}
               {React.cloneElement(v)}
             </MakeBox>
           )
