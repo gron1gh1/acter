@@ -1,34 +1,17 @@
 
-import React, { useState, useEffect, useRef, forwardRef, createRef} from 'react';
-import ReactDOM from 'react-dom';
-import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
-import { PlusCircleOutlined } from '@ant-design/icons';
-import { AiFillCode } from 'react-icons/ai';
-import { RiDragDropLine } from 'react-icons/ri';
-import { FaTrashAlt } from 'react-icons/fa';
-import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISelect, IAreaWrapper } from './Interface';
+import React, { useState, useEffect, useRef} from 'react';
+import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
+import { Droppable} from 'react-beautiful-dnd';
+import { IDroppable, IItem, IMainState, IMenuState, ISelect } from './Interface';
 import { useDispatch, useSelector, } from 'react-redux';
-import styled, { css } from 'styled-components';
+import {DroppableBox,InnerBox,InnerCodeButton,InputButton,MakeBox,InnerTrashButton,MakeButton,TrashButton,AreaWrapper} from './styledComponent';
 import { MainActions } from './reducer';
-import withForwardedRef from 'react-with-forwarded-ref';
+import WrappedRef  from './WrappedRef';
 
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
-
-export const MenuItem_bak = forwardRef<HTMLDivElement>((props, ref) => (
-  <div ref={ref}>
-    <Menu>
-      <Menu.Item>Menu</Menu.Item>
-      <Menu.SubMenu title="SubMenu">
-        <Menu.Item>SubMenuItem</Menu.Item>
-      </Menu.SubMenu>
-    </Menu>
-  </div>
-))
-
 
 export function MenuItem(style: React.CSSProperties) {
   return (
@@ -40,23 +23,6 @@ export function MenuItem(style: React.CSSProperties) {
     </Menu>
   )
 }
-
-export const forward = (Component: React.ReactElement, Props?: any, ref?: any) => forwardRef<HTMLDivElement>(() => (
-  <div ref={ref}>
-    {React.cloneElement(Component, { ...Props })}
-  </div>
-))
-
-// function withForward(Component: React.reacte) {
-//   return forwardRef<HTMLDivElement>((props, ref) => {
-//     return (
-//       <div ref={ref}>
-//         <Component {...props} />
-//       </div>
-//     )
-//   }
-//   )
-// }
 
 
 export function LoginItem(style: React.CSSProperties) {
@@ -103,175 +69,11 @@ export function LoginItem(style: React.CSSProperties) {
   )
 }
 
-export const LoginItem_bak = forwardRef<HTMLDivElement>((props, ref) => (
-  <div ref={ref}>
-    <Form
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      name="basic"
-      initialValues={{ remember: true }}
-    >
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
-  </div>
-))
-
-const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
-  background: isDraggingOver ? "lightblue" : "white",
-  cursor: 'default',
-  width: '100%',
-  minHeight: '85px',
-  textAlign: 'center',
-  paddingTop: '30px',
-  paddingBottom: '30px',
-  borderBottom: '1px LightGray solid',
-});
-
-export const ButtonItem = forwardRef<HTMLDivElement>((props, ref) => (
-  <div ref={ref}>
-    <Button type="primary">Primary</Button>
-  </div>
-))
-
-
-export function ButtonItem_bak(style: React.CSSProperties) {
+export function ButtonItem(style: React.CSSProperties) {
   return (
     <Button type="primary">Primary</Button>
   )
 }
-
-
-const MakeButton = styled(PlusCircleOutlined)`
-    font-size:2rem;
-    padding-top:30px;
-    padding-bottom:30px;
-    color:black;
-`;
-const InnerBox = styled.div<IMakeBox>`
-
-   display:none;
-    margin-bottom:5px;
-    width:100%;
-    height:50px;
-    cursor: default;
-    ${(props) => css`
-      background: ${props.boxColor};   
-    `}
-
-`;
-
-const InnerCodeButton = styled(AiFillCode)`
-    margin: 15px 7px 15px 7px;
-    font-size:1.5rem;
-    color:GhostWhite;
-    &:hover{
-      cursor: pointer;
-      color:LightGray;
-    }
-`;
-const InnerTrashButton = styled(FaTrashAlt)`
-    margin: 15px 7px 15px 7px;
-    font-size:1.5rem;
-    color:GhostWhite;
-    &:hover{
-      cursor: pointer;
-      color:LightGray;
-    }
-`;
-
-
-const MakeBox = styled.div<IMakeBox>`
-    background: GhostWhite;
-    text-align: center;
-    width: 100%;
-
-    ${(props) =>
-    props.isClick === false &&
-    css`
-      cursor:pointer;
-      &:hover{
-        box-shadow: 0 0 0 1px ${props.boxColor} inset;
-        ${MakeButton}{
-          color:RoyalBlue;
-        }
-      }
-    `}
-`;
-const InputButton = styled(RiDragDropLine)`
-      display:inline-block;
-`;
-
-const TrashButton = styled(FaTrashAlt)`
-      display:none;
-      fontSize:2rem;
-      color:DimGray;
-      &:hover{
-        cursor:pointer;
-        color:IndianRed;
-      }
-`;
-
-const DroppableBox = styled.div<IDroppableBox>`
-    cursor: default;
-    width:100%;
-    min-height:85px;
-    text-align:center;
-    padding-top:30px;
-    padding-bottom: 30px;
-    border-bottom: 1px LightGray solid;
-    
-    ${InputButton}{
-      display:inline-block;
-    }
-    ${TrashButton}{
-      display:none;
-    }
-    
-
-    ${(props) =>
-    props.isDragging &&
-    css`
-      background:skyblue;
-      
-    `}
-
-    ${(props) =>
-    !props.isDragging &&
-    css`
-      &:hover{
-        ${InputButton}{
-          display:none;
-        }
-        ${TrashButton}{
-          display:inline-block;
-        }
-      }
-    `}
-`;
 
 
 function ItemDroppable({ id, unique_n, type }: IDroppable<IMainState, IMenuState>) {
@@ -312,27 +114,7 @@ function MakeArea() {
   )
 }
 
-//AreaWrapper > Clicked Component InnerBox Output
-const AreaWrapper = styled.div<IAreaWrapper>` 
-    ${(props) => css`
-        ${MakeBox}:nth-child(${props.cursel}) ${InnerBox}{
-          display: block;
-        } 
-    `} 
-`;
 
-interface Props<A = any> {
-  children: React.ReactNode;
-  forwardedRef?: React.RefObject<A>;
-}
-
-const Comp: React.FC<Props> = ({ children, forwardedRef }) => (
-  <div ref={forwardedRef}>
-    {children}
-  </div>
-)
-
-const WrappedComp = withForwardedRef(Comp)
 
 function Area() {
   const MainArea: Array<React.ReactElement | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<React.ReactElement | null>);
@@ -341,7 +123,7 @@ function Area() {
   const dispatch = useDispatch();
 
   const uref = useRef(null);
-  const cref = createRef();
+
   useEffect(() => {
     console.log(cursel);
     console.log(`element-${cursel - 1}`, document.getElementById(`element-${cursel - 1}`));
@@ -394,9 +176,9 @@ function Area() {
               </InnerBox>
 
               {/* extractCSS(ref.current) 여기부터 시작 css 추출 */}
-              <WrappedComp ref={uref}>
+              <WrappedRef ref={(idx === cursel - 1) ? uref : undefined}>
                 {React.cloneElement(v)}
-              </WrappedComp>
+              </WrappedRef>
             </MakeBox>
           )
         }
