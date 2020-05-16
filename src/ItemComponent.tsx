@@ -1,16 +1,16 @@
 
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import ReactDOM from 'react-dom';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons';
 import { AiFillCode } from 'react-icons/ai';
 import { RiDragDropLine } from 'react-icons/ri';
 import { FaTrashAlt } from 'react-icons/fa';
 import { Droppable, Draggable, DragDropContext, DropResult, DraggingStyle, NotDraggingStyle } from 'react-beautiful-dnd';
-import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISelect,IAreaWrapper } from './Interface';
+import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISelect, IAreaWrapper } from './Interface';
 import { useDispatch, useSelector, } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { MainActions } from './reducer';
-import extractCSS from 'component-css-extractor';
 
 
 const { Header, Footer, Sider } = Layout;
@@ -18,7 +18,19 @@ const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-export function MenuItem(style: React.CSSProperties) {
+export const MenuItem = forwardRef<HTMLDivElement>((props, ref) => (
+  <div ref={ref}>
+   <Menu>
+      <Menu.Item>Menu</Menu.Item>
+      <Menu.SubMenu title="SubMenu">
+        <Menu.Item>SubMenuItem</Menu.Item>
+      </Menu.SubMenu>
+    </Menu>
+  </div>
+))
+
+
+export function MenuItem_bak(style: React.CSSProperties) {
   return (
     <Menu style={style}>
       <Menu.Item>Menu</Menu.Item>
@@ -28,8 +40,51 @@ export function MenuItem(style: React.CSSProperties) {
     </Menu>
   )
 }
+export const forward = (Component: React.ReactElement, Props?: any, ref?: any) => forwardRef<HTMLDivElement>(() => (
+  <div ref={ref}>
+    {React.cloneElement(Component, { ...Props })}
+  </div>
+))
 
-export function LoginItem(style: React.CSSProperties) {
+
+export const LoginItem = forwardRef<HTMLDivElement>((props, ref) => (
+  <div ref={ref}>
+    <Form
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }}
+      name="basic"
+      initialValues={{ remember: true }}
+    >
+      <Form.Item
+        label="Username"
+        name="username"
+        rules={[{ required: true, message: 'Please input your username!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Password"
+        name="password"
+        rules={[{ required: true, message: 'Please input your password!' }]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }} name="remember" valuePropName="checked">
+        <Checkbox>Remember me</Checkbox>
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  </div>
+))
+
+export function LoginItem_bak(style: React.CSSProperties) {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -84,7 +139,14 @@ const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   borderBottom: '1px LightGray solid',
 });
 
-export function ButtonItem(style: React.CSSProperties) {
+export const ButtonItem = forwardRef<HTMLDivElement>((props, ref) => (
+  <div ref={ref}>
+   <Button type="primary">Primary</Button>
+  </div>
+))
+
+
+export function ButtonItem_bak(style: React.CSSProperties) {
   return (
     <Button type="primary">Primary</Button>
   )
@@ -248,31 +310,65 @@ const AreaWrapper = styled.div<IAreaWrapper>`
 `;
 
 function Area() {
-  const MainArea: Array<JSX.Element | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<JSX.Element | null>);
+  const MainArea: Array<React.ReactElement | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<React.ReactElement | null>);
   const [boxColor, SetBoxColor] = useState('RoyalBlue');
-  const [cursel, SetCusel] = useState(-1);
+  const [cursel, SetCursel] = useState(-1);
   const dispatch = useDispatch();
 
+  const uref = useRef();
   useEffect(() => {
     console.log(cursel);
+    console.log(`element-${cursel - 1}`, document.getElementById(`element-${cursel - 1}`));
+    console.log(uref);
   }, [cursel]);
 
-  function Remove(index: number | undefined) {
-    if (index !== undefined)
-      dispatch(MainActions.removeArea(index));
+  async function Remove(index: number | undefined) {
+    if (index !== undefined) {
+      await dispatch(MainActions.removeArea(index));
+      await SetCursel(-1);
+    }
   }
+
+  // function getStylesWithoutDefaults( element : Element ) {
+
+  //   // creating an empty dummy object to compare with
+  //   var dummy = document.createElement( 'element-' + ( new Date().getTime() ) );
+  //   document.body.appendChild( dummy );
+
+  //   // getting computed styles for both elements
+  //   var defaultStyles = getComputedStyle( dummy );
+  //   var elementStyles = getComputedStyle( element );
+
+  //   // calculating the difference
+  //   var diff : {[key : string]: CSSStyleDeclaration} = {};
+  //   for( var key in elementStyles ) {
+  //     if(elementStyles.hasOwnProperty(key)
+  //           && defaultStyles[key] !== elementStyles[ key ] )
+  //     {
+  //       diff[key] = elementStyles[key];
+  //     }
+  //   }
+
+  //   // clear dom
+  //   dummy.remove();
+
+  //   return diff;
+  // }
+
+
   return (
     <AreaWrapper cursel={cursel}>
       {MainArea.map((v, idx) => {
         if (v) {
           return (
-            <MakeBox boxColor={boxColor} isClick={false} onClick={() => { SetCusel(idx + 1) }}>
+            <MakeBox boxColor={boxColor} isClick={false} onClick={() => SetCursel(idx + 1)}>
               <InnerBox boxColor={boxColor}>
                 <InnerCodeButton />
                 <InnerTrashButton onClick={() => Remove(idx)} onMouseEnter={() => SetBoxColor('IndianRed')} onMouseLeave={() => SetBoxColor('RoyalBlue')} />
               </InnerBox>
+
               {/* extractCSS(ref.current) 여기부터 시작 css 추출 */}
-              {React.cloneElement(v)}
+              {React.cloneElement(v, { ref: (idx === cursel - 1) ? uref : undefined })}
             </MakeBox>
           )
         }
