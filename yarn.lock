@@ -9826,6 +9826,11 @@ react-test-renderer@^16.0.0-0:
     react-is "^16.8.6"
     scheduler "^0.19.1"
 
+react-with-forwarded-ref@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/react-with-forwarded-ref/-/react-with-forwarded-ref-0.3.1.tgz#72955082706f9c2e107451a290df43730710a221"
+  integrity sha512-MoWBLzw3YYtQ+59fKKRRVctFNBB8IaOiyDT233iMimSsLq2pD1yPpPX4arB7TpLZZ0anx8J1I3v5jWjZNR89IQ==
+
 react@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"

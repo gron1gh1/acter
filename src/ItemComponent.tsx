@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, createRef} from 'react';
 import ReactDOM from 'react-dom';
 import { Layout, Menu, Form, Input, Checkbox, Button, Row } from 'antd'
 import { PlusCircleOutlined } from '@ant-design/icons';
@@ -11,16 +11,16 @@ import { IDroppable, IItem, IMainState, IMenuState, IMakeBox, IDroppableBox, ISe
 import { useDispatch, useSelector, } from 'react-redux';
 import styled, { css } from 'styled-components';
 import { MainActions } from './reducer';
-
+import withForwardedRef from 'react-with-forwarded-ref';
 
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-export const MenuItem = forwardRef<HTMLDivElement>((props, ref) => (
+export const MenuItem_bak = forwardRef<HTMLDivElement>((props, ref) => (
   <div ref={ref}>
-   <Menu>
+    <Menu>
       <Menu.Item>Menu</Menu.Item>
       <Menu.SubMenu title="SubMenu">
         <Menu.Item>SubMenuItem</Menu.Item>
@@ -30,7 +30,7 @@ export const MenuItem = forwardRef<HTMLDivElement>((props, ref) => (
 ))
 
 
-export function MenuItem_bak(style: React.CSSProperties) {
+export function MenuItem(style: React.CSSProperties) {
   return (
     <Menu style={style}>
       <Menu.Item>Menu</Menu.Item>
@@ -40,51 +40,26 @@ export function MenuItem_bak(style: React.CSSProperties) {
     </Menu>
   )
 }
+
 export const forward = (Component: React.ReactElement, Props?: any, ref?: any) => forwardRef<HTMLDivElement>(() => (
   <div ref={ref}>
     {React.cloneElement(Component, { ...Props })}
   </div>
 ))
 
+// function withForward(Component: React.reacte) {
+//   return forwardRef<HTMLDivElement>((props, ref) => {
+//     return (
+//       <div ref={ref}>
+//         <Component {...props} />
+//       </div>
+//     )
+//   }
+//   )
+// }
 
-export const LoginItem = forwardRef<HTMLDivElement>((props, ref) => (
-  <div ref={ref}>
-    <Form
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      name="basic"
-      initialValues={{ remember: true }}
-    >
-      <Form.Item
-        label="Username"
-        name="username"
-        rules={[{ required: true, message: 'Please input your username!' }]}
-      >
-        <Input />
-      </Form.Item>
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: 'Please input your password!' }]}
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }} name="remember" valuePropName="checked">
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
-  </div>
-))
-
-export function LoginItem_bak(style: React.CSSProperties) {
+export function LoginItem(style: React.CSSProperties) {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -128,6 +103,43 @@ export function LoginItem_bak(style: React.CSSProperties) {
   )
 }
 
+export const LoginItem_bak = forwardRef<HTMLDivElement>((props, ref) => (
+  <div ref={ref}>
+    <Form
+      labelCol={{ span: 8 }}
+      wrapperCol={{ span: 16 }}
+      name="basic"
+      initialValues={{ remember: true }}
+    >
+      <Form.Item
+        label="Username"
+        name="username"
+        rules={[{ required: true, message: 'Please input your username!' }]}
+      >
+        <Input />
+      </Form.Item>
+
+      <Form.Item
+        label="Password"
+        name="password"
+        rules={[{ required: true, message: 'Please input your password!' }]}
+      >
+        <Input.Password />
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }} name="remember" valuePropName="checked">
+        <Checkbox>Remember me</Checkbox>
+      </Form.Item>
+
+      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  </div>
+))
+
 const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
   background: isDraggingOver ? "lightblue" : "white",
   cursor: 'default',
@@ -141,7 +153,7 @@ const getViewStyle = (isDraggingOver: boolean): React.CSSProperties => ({
 
 export const ButtonItem = forwardRef<HTMLDivElement>((props, ref) => (
   <div ref={ref}>
-   <Button type="primary">Primary</Button>
+    <Button type="primary">Primary</Button>
   </div>
 ))
 
@@ -309,13 +321,27 @@ const AreaWrapper = styled.div<IAreaWrapper>`
     `} 
 `;
 
+interface Props<A = any> {
+  children: React.ReactNode;
+  forwardedRef?: React.RefObject<A>;
+}
+
+const Comp: React.FC<Props> = ({ children, forwardedRef }) => (
+  <div ref={forwardedRef}>
+    {children}
+  </div>
+)
+
+const WrappedComp = withForwardedRef(Comp)
+
 function Area() {
   const MainArea: Array<React.ReactElement | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<React.ReactElement | null>);
   const [boxColor, SetBoxColor] = useState('RoyalBlue');
   const [cursel, SetCursel] = useState(-1);
   const dispatch = useDispatch();
 
-  const uref = useRef();
+  const uref = useRef(null);
+  const cref = createRef();
   useEffect(() => {
     console.log(cursel);
     console.log(`element-${cursel - 1}`, document.getElementById(`element-${cursel - 1}`));
@@ -368,7 +394,9 @@ function Area() {
               </InnerBox>
 
               {/* extractCSS(ref.current) 여기부터 시작 css 추출 */}
-              {React.cloneElement(v, { ref: (idx === cursel - 1) ? uref : undefined })}
+              <WrappedComp ref={uref}>
+                {React.cloneElement(v)}
+              </WrappedComp>
             </MakeBox>
           )
         }
