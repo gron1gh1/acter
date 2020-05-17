@@ -13,7 +13,7 @@ const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
 const Header_Color = 'rgb(125,188,234)';
 
-export function MenuItem(style: React.CSSProperties) {
+export function MenuItem({style} : {style?:React.CSSProperties}) {
   return (
     <Menu style={style}>
       <Menu.Item>Menu</Menu.Item>
@@ -25,7 +25,7 @@ export function MenuItem(style: React.CSSProperties) {
 }
 
 
-export function LoginItem(style: React.CSSProperties) {
+export function LoginItem({style} : {style?:React.CSSProperties}) {
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
@@ -33,6 +33,7 @@ export function LoginItem(style: React.CSSProperties) {
   const tailLayout = {
     wrapperCol: { offset: 8, span: 16 },
   };
+  
   return (
     <Form
       {...layout}
@@ -69,7 +70,7 @@ export function LoginItem(style: React.CSSProperties) {
   )
 }
 
-export function ButtonItem(style: React.CSSProperties) {
+export function ButtonItem({style} : {style?:React.CSSProperties}) {
   return (
     <Button type="primary">Primary</Button>
   )
@@ -161,7 +162,6 @@ function Area() {
     console.log(cursel);
     console.log(uref);
     if(cursel > 0){
-
       let get_style = getStylesWithoutDefaults(uref.current);
       let style_string = ObjectToString(get_style);
       console.log(style_string);

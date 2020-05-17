@@ -46,7 +46,7 @@ export function CodeView() {
             <LiveProvider code={CodeData ? CodeData : "Hello World"} scope={scope()}>
                 <StyledLiveEditor />
                 <LiveError />
-                <LivePreview />
+                <LivePreview style={{background: 'white'}}/>
             </LiveProvider>
         </WrapperCode>
     )

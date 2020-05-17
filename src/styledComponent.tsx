@@ -14,7 +14,6 @@ color:black;
 export const InnerBox = styled.div<IMakeBox>`
 
 display:none;
-margin-bottom:5px;
 width:100%;
 height:50px;
 cursor: default;
@@ -45,6 +44,7 @@ color:GhostWhite;
 `;
 
 
+//box-shadow: 0 0 0 1px ${props.boxColor} inset;
 export const MakeBox = styled.div<IMakeBox>`
 background: GhostWhite;
 text-align: center;
@@ -55,7 +55,10 @@ props.isClick === false &&
 css`
   cursor:pointer;
   &:hover{
-    box-shadow: 0 0 0 1px ${props.boxColor} inset;
+    
+    padding-left: 1px;
+    padding-right: 1px;
+    border: 1px ${props.boxColor} solid;
     ${MakeButton}{
       color:RoyalBlue;
     }

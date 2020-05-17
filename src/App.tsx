@@ -67,6 +67,10 @@ function App() {
     useEffect(() => {
         const virtual = shallow(
             <MemoryShow MainArea={MainArea} />);
+        console.log(virtual.children().map(v=>v.name()));
+        virtual.children().forEach(v=>{
+            console.log(virtual.find(v.name()).dive().debug());
+        })
         dispatch(CodeActions.SetCode(virtual.debug()));
     }, [MainArea])
 
