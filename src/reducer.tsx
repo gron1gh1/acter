@@ -6,6 +6,7 @@ import { IMainState,ICodeState } from './Interface';
 const InitState: (IMainState) = {
     Layout: null,
     Area: [],
+    TextArea: null,
 }
 
 // immer-Reducer
@@ -37,6 +38,11 @@ class MainReducer extends ImmerReducer<IMainState>{
     makeArea() {
         let draft = this.draftState['Area'] as Array<JSX.Element | null>;
         draft.push(null);
+    }
+
+    addTextArea(content : string)
+    {
+        this.draftState['TextArea'] = content;
     }
 }
 const CodeState: ICodeState ={

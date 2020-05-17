@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect } from 'react';
-import { Row, Col, Radio } from 'antd';
+import { Row, Col, Radio,Input } from 'antd';
 import { RadioChangeEvent } from 'antd/lib/radio';
 
 import { Droppable, DragDropContext, DropResult } from 'react-beautiful-dnd';
@@ -61,13 +61,13 @@ function App() {
     const dispatch = useDispatch();
     const MainLayout: React.ReactElement = useSelector((state: ISelect) => state.mainReducer['Layout']) as React.ReactElement; // Get Data from Reducer to this 
     const MainArea: Array<JSX.Element | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<JSX.Element | null>);
+    const StyleTextArea: string = useSelector((state: ISelect) => state.mainReducer['TextArea'] as string);
 
 
     useEffect(() => {
         const virtual = shallow(
             <MemoryShow MainArea={MainArea} />);
         dispatch(CodeActions.SetCode(virtual.debug()));
-
     }, [MainArea])
 
     function onDragEnd(result: DropResult) {
@@ -125,7 +125,7 @@ function App() {
                         
                     </Col>
                     <Col flex="264px" style={{ background: 'white', height: '100vh' }}>
-                        
+                        <Input.TextArea rows={12} value={StyleTextArea !== null ? StyleTextArea : ""}/>
                     </Col>
                 </Row>
             </Fragment>

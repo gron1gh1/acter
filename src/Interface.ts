@@ -6,7 +6,7 @@ export interface IDragging {
 }
 
 export interface IMainState {
-    [key:string]: (React.ReactElement | null)[] | React.ReactElement | null;
+    [key:string]: (React.ReactElement | null)[] | React.ReactElement | string | null;
 }
 
 export interface ICodeState{

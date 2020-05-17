@@ -115,6 +115,13 @@ function MakeArea() {
 }
 
 
+function ObjectToString(obj : any)
+{
+  let res = "";
+  Object.keys(obj).forEach((v) => res+=`${v}: ${obj[v]}\n`);
+  return res;
+}
+
 
 function Area() {
   const MainArea: Array<React.ReactElement | null> = useSelector((state: ISelect) => state.mainReducer['Area'] as Array<React.ReactElement | null>);
@@ -124,10 +131,42 @@ function Area() {
 
   const uref = useRef(null);
 
+  function getStylesWithoutDefaults( element : Element|null) {
+    if(element === null) return;
+    // creating an empty dummy object to compare with
+    var dummy = document.createElement( 'element-' + ( new Date().getTime() ) );
+    document.body.appendChild( dummy );
+
+    // getting computed styles for both elements
+    var defaultStyles = getComputedStyle( dummy );
+    var elementStyles = getComputedStyle( element );
+
+    // calculating the difference
+    var diff : any = {};
+    for( var key in elementStyles ) {
+      if(elementStyles.hasOwnProperty(key)
+            && defaultStyles[key] !== elementStyles[ key ] )
+      {
+        diff[key] = elementStyles[key];
+      }
+    }
+
+    // clear dom
+    dummy.remove();
+
+    return diff;
+  }
+  
   useEffect(() => {
     console.log(cursel);
-    console.log(`element-${cursel - 1}`, document.getElementById(`element-${cursel - 1}`));
     console.log(uref);
+    if(cursel > 0){
+
+      let get_style = getStylesWithoutDefaults(uref.current);
+      let style_string = ObjectToString(get_style);
+      console.log(style_string);
+      dispatch(MainActions.addTextArea(style_string));
+    }
   }, [cursel]);
 
   async function Remove(index: number | undefined) {
@@ -137,39 +176,17 @@ function Area() {
     }
   }
 
-  // function getStylesWithoutDefaults( element : Element ) {
-
-  //   // creating an empty dummy object to compare with
-  //   var dummy = document.createElement( 'element-' + ( new Date().getTime() ) );
-  //   document.body.appendChild( dummy );
-
-  //   // getting computed styles for both elements
-  //   var defaultStyles = getComputedStyle( dummy );
-  //   var elementStyles = getComputedStyle( element );
-
-  //   // calculating the difference
-  //   var diff : {[key : string]: CSSStyleDeclaration} = {};
-  //   for( var key in elementStyles ) {
-  //     if(elementStyles.hasOwnProperty(key)
-  //           && defaultStyles[key] !== elementStyles[ key ] )
-  //     {
-  //       diff[key] = elementStyles[key];
-  //     }
-  //   }
-
-  //   // clear dom
-  //   dummy.remove();
-
-  //   return diff;
-  // }
-
 
   return (
     <AreaWrapper cursel={cursel}>
       {MainArea.map((v, idx) => {
         if (v) {
           return (
-            <MakeBox boxColor={boxColor} isClick={false} onClick={() => SetCursel(idx + 1)}>
+            <MakeBox boxColor={boxColor} isClick={false} onClick={() => 
+            {
+              SetCursel(idx + 1);
+            }
+              }>
               <InnerBox boxColor={boxColor}>
                 <InnerCodeButton />
                 <InnerTrashButton onClick={() => Remove(idx)} onMouseEnter={() => SetBoxColor('IndianRed')} onMouseLeave={() => SetBoxColor('RoyalBlue')} />
