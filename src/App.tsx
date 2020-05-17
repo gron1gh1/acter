@@ -13,6 +13,7 @@ import { CodeView } from './CodeView';
 
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, configure, mount } from 'enzyme';
+import * as $ from 'cheerio';
 
 configure({ adapter: new Adapter() });
 
@@ -69,7 +70,9 @@ function App() {
             <MemoryShow MainArea={MainArea} />);
         console.log(virtual.children().map(v=>v.name()));
         virtual.children().forEach(v=>{
-            console.log(virtual.find(v.name()).dive().debug());
+            let str = virtual.find(v.name()).dive().debug();
+            console.log(str);
+            console.log($);
         })
         dispatch(CodeActions.SetCode(virtual.debug()));
     }, [MainArea])

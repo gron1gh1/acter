@@ -22,6 +22,7 @@
     "@types/styled-components": "^5.1.0",
     "antd": "^4.1.1",
     "babel-plugin-react-element-to-jsx-string": "^1.0.0-beta.1",
+    "cheerio": "^1.0.0-rc.3",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-15": "^1.4.1",
     "enzyme-adapter-react-16": "^1.15.2",
