@@ -71,8 +71,21 @@ function App() {
         console.log(virtual.children().map(v=>v.name()));
         virtual.children().forEach(v=>{
             let str = virtual.find(v.name()).dive().debug();
+            let contents = $.default(str).contents().toArray();
             console.log(str);
-            console.log($);
+            
+            console.log(contents);
+            let res = contents.map((v) => {
+                if(v.type === 'text')
+                {
+                    return v.data;
+                }
+                else if(v.type === 'tag')
+                {
+                    return v;
+                }
+            });
+            console.log(res);
         })
         dispatch(CodeActions.SetCode(virtual.debug()));
     }, [MainArea])
