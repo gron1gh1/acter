@@ -55,6 +55,21 @@ function MemoryShow({ MainArea }: IMemoryShow) {
     )
 }
 
+function Tree(obj : Array<any>) : any
+{
+    if(obj.length === 0) return;
+    return obj.map((v) => {
+        if(v.type === 'text')
+        {
+            return null;
+        }
+        else if(v.type === 'tag')
+        {
+            return {name: v.name, child: Tree(v.children)};
+        }
+    }).filter((v)=> v !== null);
+}
+
 function App() {
     const [dragging, SetDragging] = useState<IDragging>({ state: false, item: null }); // Item information at start of drag
     const [showState, SetShowState] = useState('PREVIEW');
@@ -75,16 +90,7 @@ function App() {
             console.log(str);
             
             console.log(contents);
-            let res = contents.map((v) => {
-                if(v.type === 'text')
-                {
-                    return v.data;
-                }
-                else if(v.type === 'tag')
-                {
-                    return v;
-                }
-            });
+            let res = Tree(contents);
             console.log(res);
         })
         dispatch(CodeActions.SetCode(virtual.debug()));
