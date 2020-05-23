@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, useRef, createElement} from 'react';
 import { Layout, Menu, Form, Input, Checkbox, Button } from 'antd'
 import { Droppable} from 'react-beautiful-dnd';
 import { IDroppable, IItem, IMainState, IMenuState, ISelect } from './Interface';
@@ -7,7 +7,7 @@ import { useDispatch, useSelector, } from 'react-redux';
 import {DroppableBox,InnerBox,InnerCodeButton,InputButton,MakeBox,InnerTrashButton,MakeButton,TrashButton,AreaWrapper} from './styledComponent';
 import { MainActions } from './reducer';
 import WrappedRef  from './WrappedRef';
-
+import { transform } from 'buble';
 const { Header, Footer, Sider } = Layout;
 const Sidebar_Color = 'rgb(59,160,233)';
 const Content_Color = 'rgb(16,142,233)';
@@ -69,12 +69,16 @@ export function LoginItem({style} : {style?:React.CSSProperties}) {
     </Form>
   )
 }
-
-export function ButtonItem({style} : {style?:React.CSSProperties}) {
-  return (
-    <Button type="primary">Primary</Button>
-  )
-}
+export const ButtonItem : any = () => new Function('','React.createElement( Button, { type: "primary" }, "Primary")');
+//React.createElement( Button, { type: "primary" }, "Primary")
+//transform(`<Button type="primary">Primary</Button>`);
+console.log("버튼");
+console.log(ButtonItem);
+// export function ButtonItem({style} : {style?:React.CSSProperties}) {
+//   return (
+//     <Button type="primary">Primary</Button>
+//   )
+// }
 
 
 function ItemDroppable({ id, unique_n, type }: IDroppable<IMainState, IMenuState>) {
