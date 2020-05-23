@@ -69,11 +69,12 @@ export function LoginItem({style} : {style?:React.CSSProperties}) {
     </Form>
   )
 }
-export const ButtonItem : any = () => new Function('','React.createElement( Button, { type: "primary" }, "Primary")');
+
+export const ButtonItem : any = () => new Function('React','Button',`return ${transform(`<Button type="primary">Primary</Button>`).code}`)(React,Button);
+
 //React.createElement( Button, { type: "primary" }, "Primary")
 //transform(`<Button type="primary">Primary</Button>`);
-console.log("버튼");
-console.log(ButtonItem);
+
 // export function ButtonItem({style} : {style?:React.CSSProperties}) {
 //   return (
 //     <Button type="primary">Primary</Button>
