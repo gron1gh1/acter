@@ -10,6 +10,7 @@ import {
 } from 'react-live'
 import { ISelect } from './Interface';
 import * as Item from './ItemComponent';
+import {getNPM} from './util';
 
 const WrapperCode = styled.div`
     display:flex;
@@ -25,10 +26,10 @@ const StyledLiveEditor = styled(LiveEditor)`
 
 const scope = () => {
     let res = {};
-    
-    Object.values(Item).forEach((v,i)=>{
+
+    Object.values(Item).forEach((v, i) => {
         let name = v.name;
-        Object.assign(res, { [name] : v });
+        Object.assign(res, { [name]: v });
     })
     return res;
 }
@@ -39,14 +40,14 @@ export function CodeView() {
     const CodeData: string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this 
     useEffect(() => {
         console.log(scope());
-
+        getNPM('antd').then((v : any)=> console.log('res : ',v));
     }, [])
     return (
         <WrapperCode>
             <LiveProvider code={CodeData ? CodeData : "Hello World"} scope={scope()}>
                 <StyledLiveEditor />
                 <LiveError />
-                <LivePreview style={{background: 'white'}}/>
+                <LivePreview style={{ background: 'white' }} />
             </LiveProvider>
         </WrapperCode>
     )
