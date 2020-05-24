@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import {
@@ -24,12 +24,11 @@ const StyledLiveEditor = styled(LiveEditor)`
     caret-color: rgb(197,200,198);
 `;
 
-const scope = () => {
+const ModuleToObject = (npm_lib : object) => { // NPM Module or Local Module To Object (ex: {Button : function Button(...)}
     let res = {};
-
-    Object.values(Item).forEach((v, i) => {
-        let name = v.name;
-        Object.assign(res, { [name]: v });
+    let obj_names = Object.keys(npm_lib);
+    Object.values(npm_lib).forEach((v, i) => {
+        Object.assign(res, { [obj_names[i]]: v });
     })
     return res;
 }
@@ -37,14 +36,20 @@ const scope = () => {
 const scope2 = { LoginItem: Item.LoginItem };
 
 export function CodeView() {
-    const CodeData: string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this 
+    const CodeData: string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this
+    const [scope,SetScope] = useState({});
     useEffect(() => {
-        console.log(scope());
-        getNPM('antd').then((v : any)=> console.log('res : ',v));
+        let npm_lib = {};
+        getNPM('antd').then((v : any)=> SetScope(ModuleToObject(v)));
+      //  SetScope(get_scope(Item));
     }, [])
+
+    useEffect(()=>{
+        console.log('scope',scope);
+    },[scope])
     return (
         <WrapperCode>
-            <LiveProvider code={CodeData ? CodeData : "Hello World"} scope={scope()}>
+            <LiveProvider code={CodeData ? CodeData : "Hello World"} scope={scope}>
                 <StyledLiveEditor />
                 <LiveError />
                 <LivePreview style={{ background: 'white' }} />
