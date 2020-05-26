@@ -100,6 +100,18 @@ render(
 
 // 가상 렌더링 오류 solution : 서버에서 읽어올 떄 리액트도 다운 받아서 리액트가 두개 선언됨.
 // jspm.io  에서 한번 읽고 react 부분 지운다음에 다시 import 시켜야 함.
+
+/*
+A = $.ajax('https://dev.jspm.io/antd');
+
+BLOB = new Blob([A], {
+  type: 'text/javascript',
+  endings: 'native'
+});
+
+import(window.URL.createObjectURL(BLOB)).then(({ default: React }) => console.log(React));
+
+*/
 export function CodeView() {
     const CodeData: string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this
     const [scope,SetScope] = useState<any>({});
