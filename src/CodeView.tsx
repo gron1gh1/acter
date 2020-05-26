@@ -112,12 +112,15 @@ BLOB = new Blob([A], {
 import(window.URL.createObjectURL(BLOB)).then(({ default: React }) => console.log(React));
 
 */
+console.log( getNPM);
 export function CodeView() {
     const CodeData: string = useSelector((state: ISelect) => state.codeReducer.Code as string); // Get Data from Reducer to this
     const [scope,SetScope] = useState<any>({});
     useEffect(() => {
+      
         getNPM('antd@4.1.1').then((v : any)=> {
-          SetScope({...ModuleToObject(v),...{useState},...{useEffect}})
+          //console.log(v);
+          SetScope({...v,...{useState},...{useEffect}})
 
         });
     }, [])
