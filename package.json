@@ -24,7 +24,7 @@
     "@types/redux-actions": "^2.6.1",
     "@types/styled-components": "^5.1.0",
     "antd": "^4.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-core": "^6.26.3",
     "babel-plugin-react-element-to-jsx-string": "^1.0.0-beta.1",
     "babel-preset-react": "^6.24.1",
